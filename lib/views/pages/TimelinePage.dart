@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:speakup/views/widgets/CreatePost.dart';
+import 'package:speakup/views/widgets/PostList.dart';
 
 class TimelinePage extends StatefulWidget {
   @override
@@ -8,21 +10,14 @@ class TimelinePage extends StatefulWidget {
 }
 
 class TimelinePageState extends State<TimelinePage> {
-  final _formKey = GlobalKey<FormState>();
 
   int _selectedIndex = 0;
 
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Post',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 1: Timeline',
-      style: optionStyle,
-    ),
+  static final List<Widget> _widgetOptions = <Widget>[
+    new CreatePost(),
+    new PostList(),
     Text(
       'Index 2: Messages',
       style: optionStyle,
@@ -42,10 +37,10 @@ class TimelinePageState extends State<TimelinePage> {
         body: Padding(
             padding: EdgeInsets.all(10.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Center(
-                  child: _widgetOptions.elementAt(_selectedIndex),
+                  // child: _widgetOptions.elementAt(_selectedIndex),
+                  child: _widgetOptions[_selectedIndex]
                 ),
               ],
             )),
