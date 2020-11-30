@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:speakup/views/widgets/CreatePost.dart';
 import 'package:speakup/views/widgets/PostList.dart';
+import 'package:speakup/views/widgets/MessageList.dart';
 
 class TimelinePage extends StatefulWidget {
   @override
@@ -18,10 +19,7 @@ class TimelinePageState extends State<TimelinePage> {
   static final List<Widget> _widgetOptions = <Widget>[
     new CreatePost(),
     new PostList(),
-    Text(
-      'Index 2: Messages',
-      style: optionStyle,
-    ),
+    new MessageList()
   ];
 
   void _onNavigationItemTapped(int index) {
