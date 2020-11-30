@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:speakup/views/pages/MessagesPage.dart';
 
 class MessageList extends StatefulWidget {
 
@@ -29,7 +30,10 @@ class MessageListState extends State<MessageList> {
                     child: InkWell(
                       splashColor: Colors.blue.withAlpha(30),
                       onTap: () {
-                        print('Card tapped.');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MessagesPage())
+                        );
                       },
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
