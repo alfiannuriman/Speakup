@@ -203,6 +203,7 @@ class HomePageState extends State<HomePage> {
       )
     );
   }
+
   void doCheckLogin() {
     String username = _userController.text;
     String password = _passwordController.text;
@@ -213,6 +214,7 @@ class HomePageState extends State<HomePage> {
       try{
         print(onValueLogin);
         if (onValueLogin.data != null) {
+          snackbarAlert("Login Berhasil");
           _passwordController.text = "";
           saveDataUser(onValueLogin.data.code, onValueLogin.data.token, onValueLogin.data.email, onValueLogin.data.name);
         } else {

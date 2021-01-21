@@ -7,20 +7,20 @@ import 'package:http/http.dart' as http;
 import 'API.dart';
 
 
-Future<Login> fetchPostLogin(http.Client client, String username, String password, String baseUrl, bool remember, String tokenFcm, BuildContext context) async {
+Future<Register> fetchPostRegister(http.Client client, String email,  String username, String password, BuildContext context) async {
   try {
     Map<String, dynamic> body;
     Map<String, dynamic> bodyAuth;
 
-    bodyAuth = {'code': username, 'password': password, 'remember': remember, 'fcm_token': tokenFcm};
-    body = {'data': jsonEncode(bodyAuth)};
+    bodyAuth = {'email': email, 'username': username, 'password': password};
+    body = bodyAuth;
 
     print('body ' + body.toString());
 
     final response =
-    await http.post(baseUrl + API.API_LOGIN, body: body, headers: headers);
+    await http.post(API.BASE_URL + API.API_REGISTER, body: body);
 
-    print('fetchPostLogin '+response.body+baseUrl + API.API_LOGIN);
+    print('fetchPostLogin '+response.body+API.BASE_URL + API.API_REGISTER);
 
     if(response.statusCode == 200){
       return compute(parsePosts, response.body);
@@ -37,9 +37,9 @@ Future<Login> fetchPostLogin(http.Client client, String username, String passwor
   }
 }
 
-Login parsePosts(String responseBody) {
+Register parsePosts(String responseBody) {
   final parsed = json.decode(responseBody);
   var data = Map<String, dynamic>.from(parsed);
-  Login eventResponse = Login.fromJson(data);
+  Register eventResponse = Register.fromJson(data);
   return eventResponse;
 }
