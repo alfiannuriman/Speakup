@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:speakup/views/pages/HomePage.dart';
+import 'package:speakup/views/pages/LoginPage.dart';
 
 void main() {
   runApp(MyApp());
