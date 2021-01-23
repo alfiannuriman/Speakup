@@ -9,9 +9,10 @@ Future<List<News>> fetchTimlineData(http.Client client, String baseUrl, BuildCon
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     Map<String, dynamic> body;
+    print(prefs.getString('token'));
     Map<String, String> headers = {
-      // 'Authorization': "Bearer "+prefs.getString('token')
-      "Authorization": "Bearer d221576c7e8493a5b53028918402e45ff97d1456"
+      'Authorization': "Bearer "+prefs.getString('token')
+      // "Authorization": "Bearer d221576c7e8493a5b53028918402e45ff97d1456"
     };
 
     final response = await http.get(baseUrl+API.TIMELINE, headers: headers);
