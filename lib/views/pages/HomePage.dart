@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:speakup/views/pages/LoginPage.dart';
 import 'package:speakup/views/pages/RegisterPage.dart';
 import 'package:speakup/views/pages/AboutPage.dart';
 import 'package:speakup/views/pages/TimelinePage.dart';
@@ -92,113 +91,115 @@ class HomePageState extends State<HomePage> {
       child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(title: Text('SpeakUp - Share Stories From Around The World')),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                        padding: EdgeInsets.only(bottom: 40.0),
-                        child: Container(
-                          width: 200,
-                          height: 200,
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: AssetImage('images/logo-primary-croped.PNG'),
-                                  fit: BoxFit.cover
-                              )
-                          ),
-                        )
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: Column(
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 15.0),
-                              child: TextFormField(
-                                controller: _userController,
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'Please enter some text';
-                                  }
-
-                                  return null;
-                                },
-                                decoration: InputDecoration(
-                                  icon: Icon(Icons.people),
-                                  labelText: 'Username',
-                                  hintText: 'Masukan Username',
-                                  border: const OutlineInputBorder(),
-                                ),
-                              ),
+        body: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                          padding: EdgeInsets.only(bottom: 40.0),
+                          child: Container(
+                            width: 200,
+                            height: 200,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: AssetImage('images/logo-primary-croped.PNG'),
+                                    fit: BoxFit.cover
+                                )
                             ),
-                            Padding(
+                          )
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Column(
+                            children: <Widget>[
+                              Padding(
                                 padding: EdgeInsets.only(bottom: 15.0),
                                 child: TextFormField(
-                                  controller: _passwordController,
+                                  controller: _userController,
                                   validator: (value) {
                                     if (value.isEmpty) {
                                       return 'Please enter some text';
                                     }
+
                                     return null;
                                   },
-                                  obscureText: true,
                                   decoration: InputDecoration(
-                                    icon: Icon(Icons.lock_rounded),
-                                    labelText: 'Password',
-                                    hintText: 'Enter secure password',
+                                    icon: Icon(Icons.people),
+                                    labelText: 'Username',
+                                    hintText: 'Masukan Username',
                                     border: const OutlineInputBorder(),
                                   ),
-                                )
-                            )
-                          ],
+                                ),
+                              ),
+                              Padding(
+                                  padding: EdgeInsets.only(bottom: 15.0),
+                                  child: TextFormField(
+                                    controller: _passwordController,
+                                    validator: (value) {
+                                      if (value.isEmpty) {
+                                        return 'Please enter some text';
+                                      }
+                                      return null;
+                                    },
+                                    obscureText: true,
+                                    decoration: InputDecoration(
+                                      icon: Icon(Icons.lock_rounded),
+                                      labelText: 'Password',
+                                      hintText: 'Enter secure password',
+                                      border: const OutlineInputBorder(),
+                                    ),
+                                  )
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ]
-                )
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    child: Text('Login'),
-                    onPressed: () {
-                      if (_formKey.currentState.validate()) {
-                        doCheckLogin();
-                      }
-                    }
-                  ),
+                    ]
+                  )
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: FlatButton(
-                      textColor: Theme.of(context).cursorColor,
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      child: Text('Login'),
                       onPressed: () {
-                        Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => RegisterPage())
-                        );
-                      },
-                      child: Text(
-                        "Belum punya akun ? klik disini.",
-                        style: TextStyle(fontSize: 16),
-                        textAlign: TextAlign.right,
-                      )
+                        if (_formKey.currentState.validate()) {
+                          doCheckLogin();
+                        }
+                      }
+                    ),
                   ),
                 ),
-              ),
-            ],
-          )
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: FlatButton(
+                        textColor: Theme.of(context).cursorColor,
+                        onPressed: () {
+                          Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => RegisterPage())
+                          );
+                        },
+                        child: Text(
+                          "Belum punya akun ? klik disini.",
+                          style: TextStyle(fontSize: 16),
+                          textAlign: TextAlign.right,
+                        )
+                    ),
+                  ),
+                ),
+              ],
+            )
+          ),
         )
       )
     );

@@ -4,4 +4,5 @@ class API {
 
   static const API_LOGIN                        = 'auth/login';
   static const API_REGISTER                     = 'auth/register';
+  static const TIMELINE                         = 'post';
 }
