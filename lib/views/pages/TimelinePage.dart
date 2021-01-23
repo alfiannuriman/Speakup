@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:speakup/model/news.dart';
 import 'package:speakup/views/news_detail.dart';
+import 'package:speakup/views/pages/ProfilePage.dart';
 import 'package:speakup/views/widgets/CreatePost.dart';
 import 'package:speakup/views/widgets/PostList.dart';
 import 'package:speakup/views/widgets/MessageList.dart';
@@ -50,6 +51,22 @@ int _currentIndex = 0;
           );
         },
       ),
+      ListView.builder(
+        itemCount: news.length,
+        itemBuilder: (context, index) {
+          return NewsCard(
+            news: news[index],
+            item: news[index],
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => NewsDetail(news: news[index]))
+              );
+            },
+          );
+        },
+      ),
+      // SearchPage(),
+      Profile()
     ];
 
     return Scaffold(
@@ -73,7 +90,7 @@ int _currentIndex = 0;
             _currentIndex = value;
             switch (value) {
               case 1:
-                pageTitle = "Pencairan";  
+                pageTitle = "Pencairan";
                 break;
               case 2:
                 pageTitle = "Profile";

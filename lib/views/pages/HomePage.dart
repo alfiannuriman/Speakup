@@ -4,6 +4,9 @@ import 'package:speakup/views/pages/RegisterPage.dart';
 import 'package:speakup/views/pages/AboutPage.dart';
 import 'package:speakup/views/pages/TimelinePage.dart';
 
+import 'package:speakup/components/scroll.dart';
+import 'package:keyboard_visibility/keyboard_visibility.dart';
+
 import 'package:speakup/services/API.dart';
 import 'package:speakup/services/login.dart';
 import 'package:speakup/model/Login.dart';
@@ -70,9 +73,16 @@ class HomePageState extends State<HomePage> {
         builder: (BuildContext context) => TimelinePage()));
 
   }
+
   loadDataUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
+      String email = prefs.getString('code');
+      if(email != '' && email != null){
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => TimelinePage())
+        );
+      }
       _userController.text = prefs.getString('code');
     });
   }

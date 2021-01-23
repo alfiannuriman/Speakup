@@ -1,14 +1,20 @@
 class Register {
+  int code;
+  String info;
   Data data;
 
-  Register({this.data});
+  Register({this.code, this.info, this.data});
 
   Register.fromJson(Map<String, dynamic> json) {
+    code = json['code'];
+    info = json['info'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['code'] = this.code;
+    data['info'] = this.info;
     if (this.data != null) {
       data['data'] = this.data.toJson();
     }
@@ -16,17 +22,16 @@ class Register {
   }
 }
 class Data {
-  String token;
   String name;
   String code;
   String email;
 
-  Data({this.token, this.name, this.code, this.email});
+  Data({this.name, this.code, this.email});
 
   Data.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     code = json['code'];
-    code = json['email'];
+    email = json['email'];
   }
 
   Map<String, dynamic> toJson() {

@@ -1,25 +1,27 @@
 import 'dart:convert';
 
-import 'package:speakup/model/Login.dart';
+import 'package:speakup/model/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'API.dart';
 
 
-Future<Login> fetchPostLogin(http.Client client, String username, String password, String baseUrl, BuildContext context) async {
+Future<user> fetchGetUser(http.Client client, String token, BuildContext context) async {
   try {
+    print(token);
     Map<String, dynamic> body;
     Map<String, dynamic> bodyAuth;
+    Map<String, String> headers = {
+      'Authorization': jsonEncode({token: "Bearer "+ token}),
+    };
 
-    bodyAuth = {'username': username, 'password': password};
-    body = bodyAuth;
-
+    print(headers);
     print('body ' + body.toString());
     final response =
-    await http.post(baseUrl + API.API_LOGIN, body: body);
+    await http.get(API.BASE_URL + API.API_GET_PROFILE, headers: headers);
 
-    print('fetchPostLogin '+response.body+baseUrl + API.API_LOGIN);
+    print('fetchGetUser '+response.body+API.BASE_URL + API.API_GET_PROFILE);
 
     if(response.statusCode == 200){
       return compute(parsePosts, response.body);
@@ -37,9 +39,9 @@ Future<Login> fetchPostLogin(http.Client client, String username, String passwor
   }
 }
 
-Login parsePosts(String responseBody) {
+user parsePosts(String responseBody) {
   final parsed = json.decode(responseBody);
   var data = Map<String, dynamic>.from(parsed);
-  Login eventResponse = Login.fromJson(data);
+  user eventResponse = user.fromJson(data);
   return eventResponse;
 }
