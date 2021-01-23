@@ -32,10 +32,11 @@ class TimelinePage extends StatefulWidget {
 }
 
 
-class TimelinePageState extends State<TimelinePage> {
+class TimelinePageState extends State<TimelinePage> with WidgetsBindingObserver {
 int _currentIndex = 0;
   String pageTitle = "Beranda";
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  var timelines = news;
 
   snackbarAlert(String alertText) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -68,17 +69,16 @@ int _currentIndex = 0;
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-
     final _listPage = <Widget>[
       ListView.builder(
-        itemCount: news.length,
+        itemCount: timelines.length,
         itemBuilder: (context, index) {
           return NewsCard(
-            news: news[index],
-            item: news[index],
+            news: timelines[index],
+            item: timelines[index],
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => NewsDetail(news: news[index]))
+                  MaterialPageRoute(builder: (context) => NewsDetail(news: timelines[index]))
               );
             },
           );
@@ -140,20 +140,31 @@ int _currentIndex = 0;
   }
 
   @override
-    void initState() {
-      // TODO: implement initState
-      super.initState();
+  void initState() {
+    // TODO: implement initState
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+    loadTimeLineData();
+  }
+
+  @override
+    void didChangeAppLifecycleState(AppLifecycleState state) {
+      // TODO: implement didChangeAppLifecycleState
+      super.didChangeAppLifecycleState(state);
       loadTimeLineData();
     }
 
-    void loadTimeLineData() {
-      String baseUrl = API.BASE_URL;
-      fetchTimlineData(http.Client(), baseUrl, context).then((onvalueTimline) {
-        try {
-          print(onvalueTimline);
-        } catch (Exception) {
-          snackbarAlert("Terjadi Kesalahan, silakan coba beberapa saat lagi");
-        }
-      });
-    }
+  void loadTimeLineData() {
+    String baseUrl = API.BASE_URL;
+    fetchTimlineData(http.Client(), baseUrl, context).then((onvalueTimline) {
+      try {
+        setState(() {
+          timelines = onvalueTimline;
+        });
+        print(onvalueTimline);
+      } catch (Exception) {
+        snackbarAlert("Terjadi Kesalahan, silakan coba beberapa saat lagi");
+      }
+    });
+  }
 }

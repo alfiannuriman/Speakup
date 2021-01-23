@@ -34,7 +34,7 @@ class NewsDetailPage extends StatefulWidget {
 
 class _NewsDetailState extends State<NewsDetailPage> {
   final String title;
-  final String image;
+  final List<String> image;
   final String description;
   _NewsDetailState({
     this.title,
@@ -65,7 +65,7 @@ class _NewsDetailState extends State<NewsDetailPage> {
                 alignment: Alignment.topLeft,
                 padding: const EdgeInsets.all(10.0),
                 child: Center(
-                  child: Image.network(image, height: 225, width: 225,)
+                  child: Image.network(image[0], height: 225, width: 225,)
                 ),
               ),
               Container(
