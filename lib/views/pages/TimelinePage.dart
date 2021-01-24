@@ -3,6 +3,7 @@ import 'package:speakup/model/news.dart';
 import 'package:speakup/services/API.dart';
 import 'package:speakup/services/timeline.dart';
 import 'package:speakup/views/news_detail.dart';
+import 'package:speakup/views/pages/CreatePostPage.dart';
 import 'package:speakup/views/widgets/CreatePost.dart';
 import 'package:speakup/views/widgets/PostList.dart';
 import 'package:speakup/views/widgets/MessageList.dart';
@@ -84,6 +85,7 @@ int _currentIndex = 0;
           );
         },
       ),
+      CreatePostPage()
     ];
 
     return Scaffold(
@@ -93,6 +95,16 @@ int _currentIndex = 0;
       ),
       body: Center(
         child: _listPage[_currentIndex],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => CreatePostPage())
+          );
+          // Respond to button press
+        },
+        icon: Icon(Icons.add),
+        label: Text('Buat Post'),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -112,24 +124,23 @@ int _currentIndex = 0;
               case 2:
                 pageTitle = "Profile";
                 break;
+              case 3:
+                pageTitle = "Tambah Post";
+                break;
               default:
-              pageTitle = "Trending";
+              pageTitle = "Timline";
             }
           });
         },
         items: [
           BottomNavigationBarItem(
-            title: Text('Trending'),
+            title: Text('Timline'),
             icon: Icon(Icons.home),
           ),
           BottomNavigationBarItem(
             title: Text('Cari'),
             icon: Icon(Icons.search),
           ),
-          // BottomNavigationBarItem(
-          //   title: Text('Notifikasi'),
-          //   icon: Icon(Icons.notifications),
-          // ),
           BottomNavigationBarItem(
             title: Text('Profile'),
             icon: Icon(Icons.person),
@@ -146,6 +157,14 @@ int _currentIndex = 0;
     super.initState();
     loadTimeLineData();
   }
+
+  @override
+    void dispose() {
+      // TODO: implement dispose
+      WidgetsBinding.instance.addObserver(this);
+      super.dispose();
+      loadTimeLineData();
+    }
 
   @override
     void didChangeAppLifecycleState(AppLifecycleState state) {

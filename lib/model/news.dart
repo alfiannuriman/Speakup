@@ -22,24 +22,7 @@ class News {
 }
 
 const List<News> news = const <News>[
-  const News(
-      name: "John Doe",
-      title: "Ipsum 1",
-      description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      image:[
-        "https://image.freepik.com/free-vector/hot-news_23-2147512787.jpg",
-        "https://image.freepik.com/free-vector/hot-news_23-2147512787.jpg"
-      ]),
-  const News(
-      name: "John Doe",
-      title: "Ipsum 1",
-      description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      image:[
-        "https://image.freepik.com/free-vector/hot-news_23-2147512787.jpg",
-        "https://image.freepik.com/free-vector/hot-news_23-2147512787.jpg"
-      ]),
+  
 ];
 
 class NewsCard extends StatelessWidget {
@@ -105,7 +88,9 @@ class NewsCard extends StatelessWidget {
                 alignment: Alignment.topLeft,
                 child: CarouselSlider(
                   options: item.image.length > 0 ? CarouselOptions(
-                    aspectRatio: 16/9
+                    aspectRatio: 16/9,
+                    initialPage: 0,
+                    enableInfiniteScroll: false,
                   ) : CarouselOptions(
                     height: 0
                   ),
