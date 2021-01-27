@@ -27,16 +27,17 @@ class user {
 class Data {
 
   String full_name;
-  int detail_id;
-  int user_id;
+  String detail_id;
+  String user_id;
   String telepon;
   String birth_date;
   String birth_place;
+  String gender;
   String followers;
   String following;
 
 
-  Data({this.full_name, this.detail_id, this.user_id, this.telepon, this.birth_date, this.birth_place, this.followers, this.following});
+  Data({this.full_name, this.detail_id, this.user_id, this.telepon, this.birth_date, this.birth_place, this.gender, this.followers, this.following});
 
   Data.fromJson(Map<String, dynamic> json) {
     full_name = json['full_name'];
@@ -45,6 +46,7 @@ class Data {
     telepon = json['telepon'];
     birth_date = json['birth_date'];
     birth_place = json['birth_place'];
+    gender = json['gender'];
     following = json['following'];
     followers = json['followers'];
 
@@ -58,6 +60,7 @@ class Data {
     data['telepon'] = this.telepon;
     data['birth_place'] = this.birth_place;
     data['birth_date'] = this.birth_date;
+    data['gender'] = this.gender;
     data['followers'] = this.followers;
     data['following'] = this.following;
     return data;

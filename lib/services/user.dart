@@ -13,7 +13,7 @@ Future<user> fetchGetUser(http.Client client, String token, BuildContext context
     Map<String, dynamic> body;
     Map<String, dynamic> bodyAuth;
     Map<String, String> headers = {
-      'Authorization': jsonEncode({token: "Bearer "+ token}),
+      'Authorization': "Bearer "+ token,
     };
 
     print(headers);
@@ -26,7 +26,6 @@ Future<user> fetchGetUser(http.Client client, String token, BuildContext context
     if(response.statusCode == 200){
       return compute(parsePosts, response.body);
     }else{
-      Navigator.of(context).pop();
       return null;
     }
   } on Exception catch (exception) {

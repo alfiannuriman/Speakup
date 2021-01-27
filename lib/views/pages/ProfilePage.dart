@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 import 'package:speakup/services/user.dart';
+import 'package:speakup/services/preferences.dart';
+
 import 'package:speakup/model/user.dart';
+import 'package:speakup/views/pages/HomePage.dart';
 
 class Profile extends StatelessWidget {
   @override
@@ -30,8 +33,10 @@ class _ProfilePageState extends State<ProfilePage> {
   String email = '';
   String token = '';
   int follower = 0;
+  Data dataUser;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final inputController = TextEditingController();
 
   snackbarAlert(String alertText) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -64,15 +69,18 @@ class _ProfilePageState extends State<ProfilePage> {
   loadDataUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      print(prefs.getString('token'));
       token = prefs.getString('token');
+      name = prefs.getString('name');
+      code = prefs.getString('code');
+      email = prefs.getString('email');
     });
     fetchGetUser(http.Client(), token, context)
         .then((response) {
       try{
         if (response.code == 200) {
+          dataUser = response.data;
         } else {
-          Navigator.of(context).pop();
+          // Navigator.of(context).pop();
           snackbarAlert("Terjadi Kesalahan");
         }
       }catch(Exception){
@@ -83,7 +91,6 @@ class _ProfilePageState extends State<ProfilePage> {
   }
   @override
   void initState() {
-    super.initState();
     loadDataUser();
   }
   @override
@@ -121,9 +128,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       Container(
                         margin: EdgeInsets.only(top: 20),
                         child: Text(
-                          name == ""
-                              ? "Data Tidak Tersedia"
-                              : name,
+                          dataUser.full_name == null
+                              ? "Tidak ada nama"
+                              : dataUser.full_name,
                           style: TextStyle(
                             color: Color(0xFF343434),
                             fontWeight: FontWeight.w500,
@@ -142,7 +149,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   Container(
                                     padding: EdgeInsets.fromLTRB(20, 0 ,20, 0),
                                     child: Text(
-                                      "Follower : "+ follower.toString(),
+                                      "Follower : "+ dataUser.followers,
                                       style: TextStyle(
                                         color: Color(0xFF666666),
                                         fontWeight: FontWeight.w400,
@@ -153,7 +160,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   Container(
                                     padding: EdgeInsets.fromLTRB(20, 0 ,20, 0),
                                     child: Text(
-                                      "Following : "+ follower.toString(),
+                                      "Following : "+ dataUser.following,
                                       style: TextStyle(
                                         color: Color(0xFF666666),
                                         fontWeight: FontWeight.w400,
@@ -199,7 +206,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Container(
                   margin: const EdgeInsets.fromLTRB(15, 15, 15, 15),
                   child: TextFormField(
-                    initialValue: name,
+                    initialValue:  dataUser.full_name == null
+                        ? ""
+                        : dataUser.full_name,
                     cursorColor: Theme.of(context).cursorColor,
                     decoration: InputDecoration(
                         icon: Icon(Icons.perm_identity), labelText: "Nama Lengkap"),
@@ -210,7 +219,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Container(
                   margin: const EdgeInsets.fromLTRB(15, 15, 15, 15),
                   child: TextFormField(
-                    initialValue: name,
+                    initialValue: dataUser.telepon,
                     cursorColor: Theme.of(context).cursorColor,
                     decoration: InputDecoration(
                         icon: Icon(Icons.phone), labelText: "Telepon"),
@@ -221,7 +230,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Container(
                   margin: const EdgeInsets.fromLTRB(15, 15, 15, 15),
                   child: TextFormField(
-                    initialValue: name,
+                    initialValue: dataUser.birth_place,
                     cursorColor: Theme.of(context).cursorColor,
                     decoration: InputDecoration(
                         icon: Icon(Icons.place), labelText: "Tempat Lahir"),
@@ -232,10 +241,24 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Container(
                   margin: const EdgeInsets.fromLTRB(15, 15, 15, 15),
                   child: TextFormField(
-                    initialValue: name,
+                    controller: inputController,
+                    initialValue: dataUser.birth_date,
                     cursorColor: Theme.of(context).cursorColor,
                     decoration: InputDecoration(
                         icon: Icon(Icons.date_range), labelText: "Tanggal Lahir"),
+                    onTap: () {
+                      DatePicker.showDatePicker(context,
+                          showTitleActions: true, onChanged: (date) {
+                            print('change $date');
+                          }, onConfirm: (date) {
+                            print('confirm $date');
+                            String date1 = date.toString().split(' ')[0];
+                            String date2 = date.toString().split(' ')[1];
+                            String time =
+                                date2.split(':')[0] + ':' + date2.split(':')[1];
+                            inputController.text = date1;
+                          }, currentTime: DateTime.now(), locale: LocaleType.id);
+                    },
                   ),
                 ),
               ),
@@ -243,7 +266,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Container(
                   margin: const EdgeInsets.fromLTRB(15, 15, 15, 15),
                   child: TextFormField(
-                    initialValue: name,
+                    initialValue: dataUser.gender,
                     cursorColor: Theme.of(context).cursorColor,
                     decoration: InputDecoration(
                         icon: Icon(Icons.perm_identity), labelText: "Jenis Kelamin"),
@@ -258,6 +281,23 @@ class _ProfilePageState extends State<ProfilePage> {
                     },
                     icon: Icon(Icons.save),
                     label: Text("Simpan"),
+                    textColor: Colors.white,
+                    color: Theme.of(context).cursorColor,
+                    minWidth: 350,
+                  ),
+                ),
+              ),
+              Center(
+                child: Container(
+                  child: FlatButton.icon(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                          context, MaterialPageRoute(
+                          builder: (BuildContext context) => HomePage()));
+                      Preferences().clearPreferences(context);
+                    },
+                    icon: Icon(Icons.logout),
+                    label: Text("Keluar"),
                     textColor: Colors.white,
                     color: Theme.of(context).cursorColor,
                     minWidth: 350,

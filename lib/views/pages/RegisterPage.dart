@@ -61,96 +61,98 @@ class RegisterPageState extends State<RegisterPage> {
       child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(title: Text('Register Page')),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(bottom: 40.0),
-                child: Container(
-                  width: 200,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('images/logo-primary-croped.PNG'),
-                      fit: BoxFit.cover
-                    )
-                  ),
-                )
-              ),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-                      child: TextFormField(
-                        controller: _emailController,
+        body: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(bottom: 40.0),
+                  child: Container(
+                    width: 200,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('images/logo-primary-croped.PNG'),
+                        fit: BoxFit.cover
+                      )
+                    ),
+                  )
+                ),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+                        child: TextFormField(
+                          controller: _emailController,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter some text';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            icon: Icon(Icons.phone),
+                            labelText: "Email",
+                            hintText: 'Masukan email Anda',
+                            border: const OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+                          child: TextFormField(
+                            controller: _userController,
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter some text';
+                              }
+
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              icon: Icon(Icons.account_box),
+                              labelText: 'Username',
+                              hintText: 'Masukan username Anda',
+                              border: const OutlineInputBorder(),
+                            ),
+                          )
+                        ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+                        child: TextFormField(
+                        controller: _passwordController,
                         validator: (value) {
                           if (value.isEmpty) {
                             return 'Please enter some text';
                           }
                           return null;
                         },
+                        obscureText: true,
                         decoration: InputDecoration(
-                          icon: Icon(Icons.phone),
-                          labelText: "Email",
-                          hintText: 'Masukan email Anda',
+                          icon: Icon(Icons.lock_rounded),
+                          labelText: 'Password',
+                          hintText: 'Enter secure password',
                           border: const OutlineInputBorder(),
-                          ),
                         ),
-                      ),
-                    Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-                        child: TextFormField(
-                          controller: _userController,
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter some text';
-                            }
-
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                            icon: Icon(Icons.account_box),
-                            labelText: 'Username',
-                            hintText: 'Masukan username Anda',
-                            border: const OutlineInputBorder(),
-                          ),
-                        )
-                      ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-                      child: TextFormField(
-                      controller: _passwordController,
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                        return null;
-                      },
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        icon: Icon(Icons.lock_rounded),
-                        labelText: 'Password',
-                        hintText: 'Enter secure password',
-                        border: const OutlineInputBorder(),
-                      ),
+                      )
                     )
-                  )
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    doRegister();
-                  }
-                },
-                child: Text('Daftar Akun')
-              )
-            ],
-          )
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState.validate()) {
+                      doRegister();
+                    }
+                  },
+                  child: Text('Daftar Akun')
+                )
+              ],
+            )
+          ),
         )
       )
     );

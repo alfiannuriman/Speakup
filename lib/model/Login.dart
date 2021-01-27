@@ -1,14 +1,23 @@
 class Login {
+  int code;
+  String info;
+  String token;
   Data data;
 
-  Login({this.data});
+  Login({this.code, this.info, this.data});
 
   Login.fromJson(Map<String, dynamic> json) {
+    code = json['code'];
+    info = json['info'];
+    info = json['token'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['code'] = this.code;
+    data['info'] = this.info;
+    data['token'] = this.token;
     if (this.data != null) {
       data['data'] = this.data.toJson();
     }
@@ -17,26 +26,29 @@ class Login {
 }
 
 class Data {
-  String token;
-  String name;
+  String user_id;
   String code;
+  String name;
   String email;
+  String token;
 
-  Data({this.token, this.name, this.code, this.email});
+  Data({this.user_id, this.code, this.name, this.email, this.token});
 
   Data.fromJson(Map<String, dynamic> json) {
-    token = json['token'];
+    user_id = json['user_id'];
     name = json['name'];
     code = json['code'];
-    code = json['email'];
+    email = json['email'];
+    token = json['token'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['token'] = this.token;
+    data['user_id'] = this.user_id;
     data['name'] = this.name;
     data['code'] = this.code;
     data['email'] = this.email;
+    data['token'] = this.token;
     return data;
   }
 }
