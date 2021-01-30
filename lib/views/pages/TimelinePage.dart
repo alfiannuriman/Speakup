@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:speakup/model/news.dart';
+import 'package:speakup/services/API.dart';
+import 'package:speakup/services/timeline.dart';
 import 'package:speakup/views/news_detail.dart';
+import 'package:speakup/views/pages/ProfilePage.dart';
+import 'package:speakup/views/pages/CreatePostPage.dart';
+
 import 'package:speakup/views/widgets/CreatePost.dart';
 import 'package:speakup/views/widgets/PostList.dart';
 import 'package:speakup/views/widgets/MessageList.dart';
+import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 const Color shrinePink50 = Color(0xFFE1F5FE);
 const Color shrinePink100 = Color(0xFFB3E5FC);
@@ -27,81 +34,110 @@ class TimelinePage extends StatefulWidget {
   }
 }
 
-class TimelinePageState extends State<TimelinePage> {
+
+class TimelinePageState extends State<TimelinePage> with WidgetsBindingObserver {
 int _currentIndex = 0;
   String pageTitle = "Beranda";
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  var timelines = news;
 
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
-    final _listPage = <Widget>[
-      ListView.builder(
-        itemCount: news.length,
-        itemBuilder: (context, index) {
-          return NewsCard(
-            news: news[index],
-            item: news[index],
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => NewsDetail(news: news[index]))
-              );
-            },
-          );
-        },
-      ),
-    ];
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(pageTitle),
-        centerTitle: true,
-      ),
-      body: Center(
-        child: _listPage[_currentIndex],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _currentIndex,
-        backgroundColor: colorScheme.surface,
-        selectedItemColor: colorScheme.onSurface,
-        unselectedItemColor: colorScheme.onSurface.withOpacity(.60),
-        unselectedLabelStyle: textTheme.caption,
-        selectedLabelStyle: textTheme.caption,
-        onTap: (value) {
-          setState(() {
-            _currentIndex = value;
-            switch (value) {
-              case 1:
-                pageTitle = "Pencairan";  
-                break;
-              case 2:
-                pageTitle = "Profile";
-                break;
-              default:
-              pageTitle = "Trending";
-            }
-          });
-        },
-        items: [
-          BottomNavigationBarItem(
-            title: Text('Trending'),
-            icon: Icon(Icons.home),
+  snackbarAlert(String alertText) {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Row(
+        crossAxisAlignment: CrossAxisAlignment.baseline,
+        textBaseline: TextBaseline.alphabetic,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Icon(
+              FontAwesomeIcons.exclamationTriangle,
+              color: Colors.red,
+              size: 16,
+            ),
           ),
-          BottomNavigationBarItem(
-            title: Text('Cari'),
-            icon: Icon(Icons.search),
-          ),
-          // BottomNavigationBarItem(
-          //   title: Text('Notifikasi'),
-          //   icon: Icon(Icons.notifications),
-          // ),
-          BottomNavigationBarItem(
-            title: Text('Profile'),
-            icon: Icon(Icons.person),
-          ),
+          Container(
+            margin: EdgeInsets.only(left: 10.0),
+            width: MediaQuery.of(context).size.width / 1.5,
+            child: Text(
+              alertText,
+              style: TextStyle(fontSize: 14.0),
+            ),
+          )
         ],
       ),
+      duration: Duration(seconds: 3),
+    ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: ListView.builder(
+          itemCount: timelines.length,
+          itemBuilder: (context, index) {
+            return NewsCard(
+              news: timelines[index],
+              item: timelines[index],
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => NewsDetail(news: timelines[index]))
+                );
+              },
+            );
+          },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => CreatePostPage())
+          );
+          // Respond to button press
+        },
+        icon: Icon(Icons.add),
+        label: Text('Buat Post'),
+      ),
     );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+    loadTimeLineData();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    WidgetsBinding.instance.addObserver(this);
+    super.dispose();
+    loadTimeLineData();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // TODO: implement didChangeAppLifecycleState
+    super.didChangeAppLifecycleState(state);
+    loadTimeLineData();
+  }
+
+  void loadTimeLineData() {
+    String baseUrl = API.BASE_URL;
+    fetchTimlineData(http.Client(), baseUrl, context).then((onvalueTimline) {
+      try {
+        if (this.mounted) {
+          setState(() {
+            timelines = onvalueTimline;
+          });
+        }
+
+        print(onvalueTimline);
+      } catch (Exception) {
+        snackbarAlert("Terjadi Kesalahan, silakan coba beberapa saat lagi");
+      }
+    });
   }
 }

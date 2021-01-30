@@ -1,49 +1,28 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class News {
-  const News({this.title, this.description, this.image});
+  const News({this.name, this.title, this.description, this.image});
+
+  final String name;
   final String title;
   final String description;
-  final String image;
+  final List<String> image;
+
+  @override
+    String toString() {
+      // TODO: implement toString
+      var stringImage = StringBuffer();
+      image.forEach((item){
+        stringImage.write(item);
+      });
+      return "instance of title: ${title}, description: ${description}, image: ${stringImage}";
+    }
 }
 
 const List<News> news = const <News>[
-  const News(
-      title: "Ipsum 1",
-      description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      image:
-          "https://image.freepik.com/free-vector/hot-news_23-2147512787.jpg"),
-  const News(
-      title: "Ipsum 2",
-      description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      image:
-          "https://image.freepik.com/free-vector/hot-news_23-2147512787.jpg"),
-  const News(
-      title: "Ipsum 3",
-      description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      image:
-          "https://image.freepik.com/free-vector/hot-news_23-2147512787.jpg"),
-  const News(
-      title: "Ipsum 4",
-      description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      image:
-          "https://image.freepik.com/free-vector/hot-news_23-2147512787.jpg"),
-  const News(
-      title: "Ipsum 5",
-      description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      image:
-          "https://image.freepik.com/free-vector/hot-news_23-2147512787.jpg"),
-  const News(
-      title: "Ipsum 6",
-      description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      image: "https://image.freepik.com/free-vector/hot-news_23-2147512787.jpg")
+  
 ];
 
 class NewsCard extends StatelessWidget {
@@ -59,6 +38,7 @@ class NewsCard extends StatelessWidget {
   final VoidCallback onTap;
   final News item;
   final bool selected;
+  
   @override
   Widget build(BuildContext context) {
 
@@ -93,7 +73,7 @@ class NewsCard extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
                       child: Text(
-                        "John Doe",
+                        item.name,
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
@@ -106,8 +86,31 @@ class NewsCard extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(8.0),
                 alignment: Alignment.topLeft,
-                child: Image.network(
-                  news.image,
+                child: CarouselSlider(
+                  options: item.image.length > 0 ? CarouselOptions(
+                    aspectRatio: 16/9,
+                    initialPage: 0,
+                    enableInfiniteScroll: false,
+                  ) : CarouselOptions(
+                    height: 0
+                  ),
+                  items: item.image.map((i){
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: EdgeInsets.symmetric(horizontal: 5.0),
+                          decoration: BoxDecoration(
+                            color: Colors.amber
+                          ),
+                          child: FittedBox(
+                            child: Image.network(i),
+                            fit: BoxFit.fill,
+                          ),
+                        );
+                      },
+                    );
+                  }).toList(),
                 ),
               ),
               Container(
