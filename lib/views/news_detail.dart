@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:speakup/model/news.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class NewsDetail extends StatelessWidget {
   final News news;
@@ -62,10 +63,33 @@ class _NewsDetailState extends State<NewsDetailPage> {
           child: Column(
             children: <Widget>[
               Container(
+                padding: EdgeInsets.all(8.0),
                 alignment: Alignment.topLeft,
-                padding: const EdgeInsets.all(10.0),
-                child: Center(
-                  child: Image.network(image[0], height: 225, width: 225,)
+                child: CarouselSlider(
+                  options: image.length > 0 ? CarouselOptions(
+                    aspectRatio: 16/9,
+                    initialPage: 0,
+                    enableInfiniteScroll: false,
+                  ) : CarouselOptions(
+                    height: 0
+                  ),
+                  items: image.map((i){
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: EdgeInsets.symmetric(horizontal: 5.0),
+                          decoration: BoxDecoration(
+                            color: Colors.amber
+                          ),
+                          child: FittedBox(
+                            child: Image.network(i),
+                            fit: BoxFit.fill,
+                          ),
+                        );
+                      },
+                    );
+                  }).toList(),
                 ),
               ),
               Container(

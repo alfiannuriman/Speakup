@@ -6,4 +6,5 @@ class API {
   static const API_REGISTER                     = 'auth/register';
   static const API_GET_PROFILE                  = 'user/profile';
   static const TIMELINE                         = 'post';
+  static const TIMELINE_LIKE                    = 'post/likes';
 }

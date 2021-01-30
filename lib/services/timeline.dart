@@ -12,7 +12,6 @@ Future<List<News>> fetchTimlineData(http.Client client, String baseUrl, BuildCon
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     Map<String, dynamic> body;
-    print(prefs.getString('token'));
     Map<String, String> headers = {
       'Authorization': "Bearer "+prefs.getString('token')
       // "Authorization": "Bearer d221576c7e8493a5b53028918402e45ff97d1456"
@@ -28,6 +27,8 @@ Future<List<News>> fetchTimlineData(http.Client client, String baseUrl, BuildCon
         images.add(image["file_url"]);
       }
       var newNews = News(
+        id: timeline["article_id"],
+        liked: timeline["liked"] == "1" ? true : false,
         name: timeline["name"],
         title: timeline["content"],
         description: timeline["content"],
@@ -78,6 +79,28 @@ Future<String>submitPost(http.Client client, String baseUrl, List<Asset> images,
     http.Response response = await http.Response.fromStream(await request.send());
     var data = json.decode(response.body);
     return data["info"];
+  }on Exception catch(exception) {
+      // Navigator.of(context).pop();
+      return null;
+    }catch(error){
+      // Navigator.of(context).pop();
+      return null;
+    } 
+}
+
+Future<String>like(http.Client client, String baseUrl, String articleId, BuildContext context) async {
+  try {
+    print("ini baseurl "+baseUrl);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    Map<String, dynamic> body;
+    Map<String, String> headers = {
+      'Authorization': "Bearer "+prefs.getString('token')
+      // "Authorization": "Bearer d221576c7e8493a5b53028918402e45ff97d1456"
+    };
+    final response = await http.post(baseUrl+API.TIMELINE, headers: headers);
+    var result = json.decode(response.body);
+    print(result);
+    return result["info"];
   }on Exception catch(exception) {
       // Navigator.of(context).pop();
       return null;
