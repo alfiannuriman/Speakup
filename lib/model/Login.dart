@@ -10,7 +10,7 @@ class Login {
     code = json['code'];
     info = json['info'];
     info = json['token'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != false ? new Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {

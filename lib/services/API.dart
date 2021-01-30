@@ -5,5 +5,6 @@ class API {
   static const API_GET_USER                     = 'auth/user';
   static const API_REGISTER                     = 'auth/register';
   static const API_GET_PROFILE                  = 'user/profile';
+  static const API_SEARCH_PROFILE               = 'user';
   static const TIMELINE                         = 'post';
 }

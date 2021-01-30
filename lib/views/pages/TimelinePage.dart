@@ -72,6 +72,10 @@ int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Beranda"),
+        centerTitle: true,
+      ),
       body: Center(
         child: ListView.builder(
           itemCount: timelines.length,

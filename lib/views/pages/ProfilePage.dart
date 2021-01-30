@@ -421,6 +421,10 @@ class _ProfilePageState extends State<ProfilePage> {
           }
           return Scaffold(
             key: _scaffoldKey,
+            appBar: AppBar(
+              title: Text("Profile"),
+              centerTitle: true,
+            ),
             body: SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.fromLTRB(0, 0 ,0, 25),
