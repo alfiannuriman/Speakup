@@ -4,6 +4,8 @@ import 'package:speakup/services/API.dart';
 import 'package:speakup/services/timeline.dart';
 import 'package:speakup/views/news_detail.dart';
 import 'package:speakup/views/pages/ProfilePage.dart';
+import 'package:speakup/views/pages/CreatePostPage.dart';
+
 import 'package:speakup/views/widgets/CreatePost.dart';
 import 'package:speakup/views/widgets/PostList.dart';
 import 'package:speakup/views/widgets/MessageList.dart';
@@ -67,91 +69,34 @@ int _currentIndex = 0;
     ));
   }
 
+  @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-    final _listPage = <Widget>[
-      ListView.builder(
-        itemCount: timelines.length,
-        itemBuilder: (context, index) {
-          return NewsCard(
-            news: timelines[index],
-            item: timelines[index],
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => NewsDetail(news: timelines[index]))
-              );
-            },
-          );
-        },
-      ),
-      ListView.builder(
-        itemCount: news.length,
-        itemBuilder: (context, index) {
-          return NewsCard(
-            news: news[index],
-            item: news[index],
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => NewsDetail(news: news[index]))
-              );
-            },
-          );
-        },
-      ),
-      // SearchPage(),
-      Profile()
-    ];
-
     return Scaffold(
-      appBar: AppBar(
-        title: Text(pageTitle),
-        centerTitle: true,
-      ),
       body: Center(
-        child: _listPage[_currentIndex],
+        child: ListView.builder(
+          itemCount: timelines.length,
+          itemBuilder: (context, index) {
+            return NewsCard(
+              news: timelines[index],
+              item: timelines[index],
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => NewsDetail(news: timelines[index]))
+                );
+              },
+            );
+          },
+        ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _currentIndex,
-        backgroundColor: colorScheme.surface,
-        selectedItemColor: colorScheme.onSurface,
-        unselectedItemColor: colorScheme.onSurface.withOpacity(.60),
-        unselectedLabelStyle: textTheme.caption,
-        selectedLabelStyle: textTheme.caption,
-        onTap: (value) {
-          setState(() {
-            _currentIndex = value;
-            switch (value) {
-              case 1:
-                pageTitle = "Pencairan";
-                break;
-              case 2:
-                pageTitle = "Profile";
-                break;
-              default:
-              pageTitle = "Trending";
-            }
-          });
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => CreatePostPage())
+          );
+          // Respond to button press
         },
-        items: [
-          BottomNavigationBarItem(
-            title: Text('Trending'),
-            icon: Icon(Icons.home),
-          ),
-          BottomNavigationBarItem(
-            title: Text('Cari'),
-            icon: Icon(Icons.search),
-          ),
-          // BottomNavigationBarItem(
-          //   title: Text('Notifikasi'),
-          //   icon: Icon(Icons.notifications),
-          // ),
-          BottomNavigationBarItem(
-            title: Text('Profile'),
-            icon: Icon(Icons.person),
-          ),
-        ],
+        icon: Icon(Icons.add),
+        label: Text('Buat Post'),
       ),
     );
   }
@@ -165,19 +110,30 @@ int _currentIndex = 0;
   }
 
   @override
-    void didChangeAppLifecycleState(AppLifecycleState state) {
-      // TODO: implement didChangeAppLifecycleState
-      super.didChangeAppLifecycleState(state);
-      loadTimeLineData();
-    }
+  void dispose() {
+    // TODO: implement dispose
+    WidgetsBinding.instance.addObserver(this);
+    super.dispose();
+    loadTimeLineData();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // TODO: implement didChangeAppLifecycleState
+    super.didChangeAppLifecycleState(state);
+    loadTimeLineData();
+  }
 
   void loadTimeLineData() {
     String baseUrl = API.BASE_URL;
     fetchTimlineData(http.Client(), baseUrl, context).then((onvalueTimline) {
       try {
-        setState(() {
-          timelines = onvalueTimline;
-        });
+        if (this.mounted) {
+          setState(() {
+            timelines = onvalueTimline;
+          });
+        }
+
         print(onvalueTimline);
       } catch (Exception) {
         snackbarAlert("Terjadi Kesalahan, silakan coba beberapa saat lagi");

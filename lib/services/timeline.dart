@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:speakup/model/news.dart';
 import 'API.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 Future<List<News>> fetchTimlineData(http.Client client, String baseUrl, BuildContext context) async {
   try {
@@ -30,7 +33,6 @@ Future<List<News>> fetchTimlineData(http.Client client, String baseUrl, BuildCon
         description: timeline["content"],
         image: images
       );
-      print(newNews);
       timelinesList.add(newNews);
     }
     // print("zxc");
@@ -44,4 +46,43 @@ Future<List<News>> fetchTimlineData(http.Client client, String baseUrl, BuildCon
     // Navigator.of(context).pop();
     return null;
   }
+}
+
+Future<String>submitPost(http.Client client, String baseUrl, List<Asset> images, String content, BuildContext context) async {
+  try {
+    print(baseUrl);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    print(prefs.getString('token'));
+    Map<String, String> headers = {
+      'Authorization': "Bearer "+prefs.getString('token')
+      // "Authorization": "Bearer d221576c7e8493a5b53028918402e45ff97d1456"
+    };
+
+    Uri uri = Uri.parse(baseUrl);
+    http.MultipartRequest request =  http.MultipartRequest("POST", uri);
+    for (var image in images) {
+      ByteData byteData = await image.getByteData();
+      List<int> imageData = byteData.buffer.asUint8List();
+      http.MultipartFile multipartFile = http.MultipartFile.fromBytes(
+        "medias[]",
+        imageData,
+        filename: image.name,
+        contentType: MediaType("image", "jpeg")
+      );
+      request.files.add(multipartFile);
+    }
+    request.fields["content"] = content;
+    request.fields["scope"] = "0";
+    request.fields["status_id"] = "1";
+    request.headers["Authorization"] = "Bearer "+prefs.getString('token');
+    http.Response response = await http.Response.fromStream(await request.send());
+    var data = json.decode(response.body);
+    return data["info"];
+  }on Exception catch(exception) {
+      // Navigator.of(context).pop();
+      return null;
+    }catch(error){
+      // Navigator.of(context).pop();
+      return null;
+    } 
 }

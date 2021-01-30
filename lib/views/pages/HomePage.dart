@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:speakup/views/pages/RegisterPage.dart';
 import 'package:speakup/views/pages/AboutPage.dart';
-import 'package:speakup/views/pages/TimelinePage.dart';
+import 'package:speakup/views/pages/BasePage.dart';
 
 import 'package:speakup/components/scroll.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
@@ -69,7 +69,7 @@ class HomePageState extends State<HomePage> {
     Navigator.of(context).popUntil((route) => route.isFirst);
     Navigator.pushReplacement(
         context, MaterialPageRoute(
-        builder: (BuildContext context) => TimelinePage()));
+        builder: (BuildContext context) => BasePage()));
 
   }
 
@@ -245,7 +245,7 @@ class HomePageState extends State<HomePage> {
         print(response);
         if (response.code == 200) {
           Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => TimelinePage())
+              MaterialPageRoute(builder: (context) => BasePage())
           );
         } else {
           // snackbarAlert("Terjadi Kesalahan");
