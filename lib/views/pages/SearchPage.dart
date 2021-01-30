@@ -90,7 +90,7 @@ class DataSearch extends SearchDelegate<String> {
           text: TextSpan(
               text: suggestionList[index].substring(0, query.length),
               style:
-                  TextStyle(color: Colors.green, fontWeight: FontWeight.w700),
+                  TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
               children: [
                 TextSpan(
                     text: suggestionList[index].substring(query.length),
