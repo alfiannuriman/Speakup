@@ -16,7 +16,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 final _userController = TextEditingController();
 final _passwordController = TextEditingController();
 
-
 class HomePage extends StatefulWidget {
   @override
   HomePageState createState() {
@@ -67,10 +66,8 @@ class HomePageState extends State<HomePage> {
     print('token ' + token);
 
     Navigator.of(context).popUntil((route) => route.isFirst);
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(
-        builder: (BuildContext context) => BasePage()));
-
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (BuildContext context) => BasePage()));
   }
 
   loadDataUser() async {
@@ -78,7 +75,7 @@ class HomePageState extends State<HomePage> {
     setState(() {
       String token = prefs.getString('token');
       print(token);
-      if(token != '' && token != null){
+      if (token != '' && token != null) {
         doCheckLogin(token);
       }
     });
@@ -89,128 +86,122 @@ class HomePageState extends State<HomePage> {
     super.initState();
     loadDataUser();
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('images/background.png'), fit: BoxFit.cover)
-      ),
-      child: Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(title: Text('SpeakUp - Share Stories From Around The World')),
-        body: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Form(
-                  key: _formKey,
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('images/background.png'), fit: BoxFit.cover)),
+        child: Scaffold(
+            key: _scaffoldKey,
+            appBar: AppBar(
+                title: Text('SpeakUp - Share Stories From Around The World')),
+            body: SingleChildScrollView(
+              child: Center(
                   child: Column(
-                    children: <Widget>[
-                      Padding(
-                          padding: EdgeInsets.only(bottom: 40.0),
-                          child: Container(
-                            width: 200,
-                            height: 200,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: AssetImage('images/logo-primary-croped.PNG'),
-                                    fit: BoxFit.cover
-                                )
-                            ),
-                          )
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Column(
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.only(bottom: 15.0),
-                                child: TextFormField(
-                                  controller: _userController,
-                                  validator: (value) {
-                                    if (value.isEmpty) {
-                                      return 'Please enter some text';
-                                    }
-
-                                    return null;
-                                  },
-                                  decoration: InputDecoration(
-                                    icon: Icon(Icons.people),
-                                    labelText: 'Username',
-                                    hintText: 'Masukan Username',
-                                    border: const OutlineInputBorder(),
-                                  ),
-                                ),
-                              ),
-                              Padding(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Form(
+                      key: _formKey,
+                      child: Column(children: <Widget>[
+                        Padding(
+                            padding: EdgeInsets.only(bottom: 40.0),
+                            child: Container(
+                              width: 200,
+                              height: 200,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage(
+                                          'images/logo-primary-croped.PNG'),
+                                      fit: BoxFit.cover)),
+                            )),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 5.0),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Column(
+                              children: <Widget>[
+                                Padding(
                                   padding: EdgeInsets.only(bottom: 15.0),
                                   child: TextFormField(
-                                    controller: _passwordController,
+                                    controller: _userController,
                                     validator: (value) {
                                       if (value.isEmpty) {
                                         return 'Please enter some text';
                                       }
+
                                       return null;
                                     },
-                                    obscureText: true,
                                     decoration: InputDecoration(
-                                      icon: Icon(Icons.lock_rounded),
-                                      labelText: 'Password',
-                                      hintText: 'Enter secure password',
+                                      icon: Icon(Icons.people),
+                                      labelText: 'Username',
+                                      hintText: 'Masukan Username',
                                       border: const OutlineInputBorder(),
                                     ),
-                                  )
-                              )
-                            ],
+                                  ),
+                                ),
+                                Padding(
+                                    padding: EdgeInsets.only(bottom: 15.0),
+                                    child: TextFormField(
+                                      controller: _passwordController,
+                                      validator: (value) {
+                                        if (value.isEmpty) {
+                                          return 'Please enter some text';
+                                        }
+                                        return null;
+                                      },
+                                      obscureText: true,
+                                      decoration: InputDecoration(
+                                        icon: Icon(Icons.lock_rounded),
+                                        labelText: 'Password',
+                                        hintText: 'Enter secure password',
+                                        border: const OutlineInputBorder(),
+                                      ),
+                                    ))
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ]
-                  )
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      child: Text('Login'),
-                      onPressed: () {
-                        if (_formKey.currentState.validate()) {
-                          doLogin();
-                        }
-                      }
+                      ])),
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                          child: Text('Login'),
+                          onPressed: () {
+                            if (_formKey.currentState.validate()) {
+                              doLogin();
+                            }
+                          }),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: FlatButton(
-                        textColor: Theme.of(context).cursorColor,
-                        onPressed: () {
-                          Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => RegisterPage())
-                          );
-                        },
-                        child: Text(
-                          "Belum punya akun ? klik disini.",
-                          style: TextStyle(fontSize: 16),
-                          textAlign: TextAlign.right,
-                        )
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: FlatButton(
+                          textColor: Theme.of(context).cursorColor,
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => RegisterPage()));
+                          },
+                          child: Text(
+                            "Belum punya akun ? klik disini.",
+                            style: TextStyle(fontSize: 16),
+                            textAlign: TextAlign.right,
+                          )),
                     ),
                   ),
-                ),
-              ],
-            )
-          ),
-        )
-      )
-    );
+                ],
+              )),
+            )));
   }
 
   void doLogin() {
@@ -220,17 +211,18 @@ class HomePageState extends State<HomePage> {
 
     fetchPostLogin(http.Client(), username, password, baseUrl, context)
         .then((onValueLogin) {
-      try{
+      try {
         print(onValueLogin);
-        if (onValueLogin.data != null) {
+        if (onValueLogin.code == 200) {
           snackbarAlert("Login Berhasil");
           _passwordController.text = "";
-          saveDataUser(onValueLogin.data.code, onValueLogin.data.token, onValueLogin.data.email, onValueLogin.data.name);
+          saveDataUser(onValueLogin.data.code, onValueLogin.data.token,
+              onValueLogin.data.email, onValueLogin.data.name);
         } else {
-          Navigator.of(context).pop();
-          snackbarAlert("Terjadi Kesalahan");
+          // Navigator.of(context).pop();
+          snackbarAlert(onValueLogin.info);
         }
-      }catch(Exception){
+      } catch (Exception) {
         //Navigator.of(context).pop();
         snackbarAlert("Terjadi Kesalahan, silakan coba beberapa saat lagi");
       }
@@ -238,19 +230,16 @@ class HomePageState extends State<HomePage> {
   }
 
   void doCheckLogin(String token) {
-
-    fetchGetLogin(http.Client(), token, context)
-        .then((response) {
-      try{
+    fetchGetLogin(http.Client(), token, context).then((response) {
+      try {
         print(response);
         if (response.code == 200) {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => BasePage())
-          );
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => BasePage()));
         } else {
           // snackbarAlert("Terjadi Kesalahan");
         }
-      }catch(Exception){
+      } catch (Exception) {
         //Navigator.of(context).pop();
         snackbarAlert("Terjadi Kesalahan, silakan coba beberapa saat lagi");
       }

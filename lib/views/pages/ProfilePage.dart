@@ -10,6 +10,7 @@ import 'package:speakup/services/preferences.dart';
 
 import 'package:speakup/model/user.dart';
 import 'package:speakup/views/pages/HomePage.dart';
+import 'package:speakup/views/pages/AboutPage.dart';
 
 class Profile extends StatelessWidget {
   @override
@@ -18,7 +19,6 @@ class Profile extends StatelessWidget {
     return ProfilePage();
   }
 }
-
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key key, this.title}) : super(key: key);
@@ -30,7 +30,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   Future<String> _calculation = Future<String>.delayed(
     Duration(seconds: 2),
-        () => 'Data Loaded',
+    () => 'Data Loaded',
   );
 
   String name = '';
@@ -86,7 +86,6 @@ class _ProfilePageState extends State<ProfilePage> {
       name = prefs.getString('name');
       code = prefs.getString('code');
       email = prefs.getString('email');
-
     });
   }
 
@@ -98,13 +97,13 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void doPostUser() {
     String full_name = _fullnameController.text;
-    String telepon  = _teleponController.text;
+    String telepon = _teleponController.text;
     String birth_place = _birthplaceController.text;
     String birth_date = _birthdateController.text;
     String gender = _valGender;
-    fetchPostUser(full_name, telepon, gender,  birth_place, birth_date, context)
+    fetchPostUser(full_name, telepon, gender, birth_place, birth_date, context)
         .then((onValueLogin) {
-      try{
+      try {
         if (onValueLogin.data != null) {
           Navigator.of(context).pop();
           snackbarAlert("Update Berhasil");
@@ -112,7 +111,7 @@ class _ProfilePageState extends State<ProfilePage> {
           Navigator.of(context).pop();
           snackbarAlert("Terjadi Kesalahan");
         }
-      }catch(Exception){
+      } catch (Exception) {
         Navigator.of(context).pop();
         snackbarAlert("Terjadi Kesalahan, silakan coba beberapa saat lagi");
       }
@@ -141,202 +140,202 @@ class _ProfilePageState extends State<ProfilePage> {
 
               children = <Widget>[
                 Form(
-                  key: _formKey,
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.fromLTRB(0, 10 ,0, 30),
-                        color: Color(0xFFEFEFEF),
-                        child: Center(
-                          child: Column(
-                            children: <Widget>[
-                              Container(
-                                  width: 80.0,
-                                  height: 80.0,
-                                  decoration: new BoxDecoration(
-                                      border: Border.all(
-                                          width: 3.0,
-                                          color: const Color(0xFFFFFFFF)),
-                                      shape: BoxShape.circle,
-                                      image: new DecorationImage(
-                                          fit: BoxFit.fill,
-                                          image: NetworkImage(
-                                              "https://adminlte.io/themes/AdminLTE/dist/img/user2-160x160.jpg"
+                    key: _formKey,
+                    child: Column(
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.fromLTRB(0, 10 ,0, 30),
+                            color: Color(0xFFEFEFEF),
+                            child: Center(
+                              child: Column(
+                                children: <Widget>[
+                                  Container(
+                                      width: 80.0,
+                                      height: 80.0,
+                                      decoration: new BoxDecoration(
+                                          border: Border.all(
+                                              width: 3.0,
+                                              color: const Color(0xFFFFFFFF)),
+                                          shape: BoxShape.circle,
+                                          image: new DecorationImage(
+                                              fit: BoxFit.fill,
+                                              image: NetworkImage(
+                                                  "https://adminlte.io/themes/AdminLTE/dist/img/user2-160x160.jpg"
+                                              )
                                           )
                                       )
-                                  )
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(top: 20),
-                                child: Text(
-                                  name == null
-                                      ? "Tidak ada nama"
-                                      : name,
-                                  style: TextStyle(
-                                    color: Color(0xFF343434),
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14,
                                   ),
-                                ),
-                              ),
-                              Container(
-                                  margin: EdgeInsets.only(top: 15),
-                                  child: Center(
-                                    child: Column(
-                                        children: <Widget>[
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: <Widget>[
-                                              Container(
-                                                padding: EdgeInsets.fromLTRB(20, 0 ,20, 0),
-                                                child: Text(
-                                                  "Follower : "+ dataUser.followers,
-                                                  style: TextStyle(
-                                                    color: Color(0xFF666666),
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 12,
-                                                  ),
-                                                ),
-                                              ),
-                                              Container(
-                                                padding: EdgeInsets.fromLTRB(20, 0 ,20, 0),
-                                                child: Text(
-                                                  "Following : "+ dataUser.following,
-                                                  style: TextStyle(
-                                                    color: Color(0xFF666666),
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 12,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ]
+                                  Container(
+                                    margin: EdgeInsets.only(top: 20),
+                                    child: Text(
+                                      name == null
+                                          ? "Tidak ada nama"
+                                          : name,
+                                      style: TextStyle(
+                                        color: Color(0xFF343434),
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14,
+                                      ),
                                     ),
-                                  )
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: Container(
-                          margin: const EdgeInsets.fromLTRB(15, 15, 15, 15),
-                          child: TextFormField(
-                            readOnly: true,
-                            initialValue: code,
-                            cursorColor: Theme.of(context).cursorColor,
-                            decoration: InputDecoration(
-                                icon: Icon(Icons.perm_identity), labelText: "Nama Pengguna"),
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: Container(
-                          margin: const EdgeInsets.fromLTRB(15, 15, 15, 15),
-                          child: TextFormField(
-                            readOnly: true,
-                            initialValue: email,
-                            cursorColor: Theme.of(context).cursorColor,
-                            decoration: InputDecoration(
-                                icon: Icon(Icons.email), labelText: "E-mail"),
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: Container(
-                          margin: const EdgeInsets.fromLTRB(15, 15, 15, 15),
-                          child: TextFormField(
-                            controller: _fullnameController,
-                            cursorColor: Theme.of(context).cursorColor,
-
-                            decoration: InputDecoration(
-                                icon: Icon(Icons.perm_identity), labelText: "Nama Lengkap"),
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: Container(
-                          margin: const EdgeInsets.fromLTRB(15, 15, 15, 15),
-                          child: TextFormField(
-                            controller: _teleponController,
-                            cursorColor: Theme.of(context).cursorColor,
-                            decoration: InputDecoration(
-                                icon: Icon(Icons.phone), labelText: "Telepon"),
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: Container(
-                          margin: const EdgeInsets.fromLTRB(15, 15, 15, 15),
-                          child: TextFormField(
-                            controller: _birthplaceController,
-                            cursorColor: Theme.of(context).cursorColor,
-                            decoration: InputDecoration(
-                                icon: Icon(Icons.place), labelText: "Tempat Lahir"),
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: Container(
-                          margin: const EdgeInsets.fromLTRB(15, 15, 15, 15),
-                          child: TextFormField(
-                            readOnly: true,
-                            controller: _birthdateController,
-                            cursorColor: Theme.of(context).cursorColor,
-                            decoration: InputDecoration(
-                                icon: Icon(Icons.date_range), labelText: "Tanggal Lahir"),
-                            onTap: () {
-                              DatePicker.showDatePicker(context,
-                                  showTitleActions: true, onChanged: (date) {
-                                    print('change $date');
-                                  }, onConfirm: (date) {
-                                    print('confirm $date');
-                                    String date1 = date.toString().split(' ')[0];
-                                    String date2 = date.toString().split(' ')[1];
-                                    String time =
-                                        date2.split(':')[0] + ':' + date2.split(':')[1];
-                                    _birthdateController.text = date1;
-                                  }, currentTime: DateTime.now(), locale: LocaleType.id);
-                            },
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.fromLTRB(15, 15, 15, 15),
-                        child: DropdownButton(
-                          hint: Text("Select The Gender"),
-                          value: _valGender,
-                          isExpanded: true,
-                          // style: TextStyle(color: Colors.white),
-                          items: _listGender.map((value) {
-                            return DropdownMenuItem(
-                              child:Row(
-                                children: <Widget>[
-                                  Icon(Icons.perm_identity),
-                                  SizedBox(width: 10),
-                                  Text(
-                                      value == "M"
-                                        ? "Pria"
-                                        : "Wanita",
+                                  ),
+                                  Container(
+                                      margin: EdgeInsets.only(top: 15),
+                                      child: Center(
+                                        child: Column(
+                                            children: <Widget>[
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Container(
+                                                    padding: EdgeInsets.fromLTRB(20, 0 ,20, 0),
+                                                    child: Text(
+                                                      "Follower : "+ dataUser.followers,
+                                                      style: TextStyle(
+                                                        color: Color(0xFF666666),
+                                                        fontWeight: FontWeight.w400,
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    padding: EdgeInsets.fromLTRB(20, 0 ,20, 0),
+                                                    child: Text(
+                                                      "Following : "+ dataUser.following,
+                                                      style: TextStyle(
+                                                        color: Color(0xFF666666),
+                                                        fontWeight: FontWeight.w400,
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ]
+                                        ),
+                                      )
                                   ),
                                 ],
                               ),
-                              // child: Text(value == "M"
-                              //     ? "Pria"
-                              //     : "Wanita"),
-                              value: value,
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              _valGender = value;  //Untuk memberitahu _valGender bahwa isi nya akan diubah sesuai dengan value yang kita pilih
-                            });
-                          },
-                        ),
-                      )
-                    ]
-                  )
+                            ),
+                          ),
+                          Center(
+                            child: Container(
+                              margin: const EdgeInsets.fromLTRB(15, 15, 15, 15),
+                              child: TextFormField(
+                                readOnly: true,
+                                initialValue: code,
+                                cursorColor: Theme.of(context).cursorColor,
+                                decoration: InputDecoration(
+                                    icon: Icon(Icons.perm_identity), labelText: "Nama Pengguna"),
+                              ),
+                            ),
+                          ),
+                          Center(
+                            child: Container(
+                              margin: const EdgeInsets.fromLTRB(15, 15, 15, 15),
+                              child: TextFormField(
+                                readOnly: true,
+                                initialValue: email,
+                                cursorColor: Theme.of(context).cursorColor,
+                                decoration: InputDecoration(
+                                    icon: Icon(Icons.email), labelText: "E-mail"),
+                              ),
+                            ),
+                          ),
+                          Center(
+                            child: Container(
+                              margin: const EdgeInsets.fromLTRB(15, 15, 15, 15),
+                              child: TextFormField(
+                                controller: _fullnameController,
+                                cursorColor: Theme.of(context).cursorColor,
+
+                                decoration: InputDecoration(
+                                    icon: Icon(Icons.perm_identity), labelText: "Nama Lengkap"),
+                              ),
+                            ),
+                          ),
+                          Center(
+                            child: Container(
+                              margin: const EdgeInsets.fromLTRB(15, 15, 15, 15),
+                              child: TextFormField(
+                                controller: _teleponController,
+                                cursorColor: Theme.of(context).cursorColor,
+                                decoration: InputDecoration(
+                                    icon: Icon(Icons.phone), labelText: "Telepon"),
+                              ),
+                            ),
+                          ),
+                          Center(
+                            child: Container(
+                              margin: const EdgeInsets.fromLTRB(15, 15, 15, 15),
+                              child: TextFormField(
+                                controller: _birthplaceController,
+                                cursorColor: Theme.of(context).cursorColor,
+                                decoration: InputDecoration(
+                                    icon: Icon(Icons.place), labelText: "Tempat Lahir"),
+                              ),
+                            ),
+                          ),
+                          Center(
+                            child: Container(
+                              margin: const EdgeInsets.fromLTRB(15, 15, 15, 15),
+                              child: TextFormField(
+                                readOnly: true,
+                                controller: _birthdateController,
+                                cursorColor: Theme.of(context).cursorColor,
+                                decoration: InputDecoration(
+                                    icon: Icon(Icons.date_range), labelText: "Tanggal Lahir"),
+                                onTap: () {
+                                  DatePicker.showDatePicker(context,
+                                      showTitleActions: true, onChanged: (date) {
+                                        print('change $date');
+                                      }, onConfirm: (date) {
+                                        print('confirm $date');
+                                        String date1 = date.toString().split(' ')[0];
+                                        String date2 = date.toString().split(' ')[1];
+                                        String time =
+                                            date2.split(':')[0] + ':' + date2.split(':')[1];
+                                        _birthdateController.text = date1;
+                                      }, currentTime: DateTime.now(), locale: LocaleType.id);
+                                },
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.fromLTRB(15, 15, 15, 15),
+                            child: DropdownButton(
+                              hint: Text("Select The Gender"),
+                              value: _valGender,
+                              isExpanded: true,
+                              // style: TextStyle(color: Colors.white),
+                              items: _listGender.map((value) {
+                                return DropdownMenuItem(
+                                  child:Row(
+                                    children: <Widget>[
+                                      Icon(Icons.perm_identity),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        value == "M"
+                                            ? "Pria"
+                                            : "Wanita",
+                                      ),
+                                    ],
+                                  ),
+                                  // child: Text(value == "M"
+                                  //     ? "Pria"
+                                  //     : "Wanita"),
+                                  value: value,
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  _valGender = value;  //Untuk memberitahu _valGender bahwa isi nya akan diubah sesuai dengan value yang kita pilih
+                                });
+                              },
+                            ),
+                          )
+                        ]
+                    )
                 ),
                 Center(
                   child: Container(
@@ -354,28 +353,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                 ),
-                Center(
-                  child: Container(
-                    child: FlatButton.icon(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                            context, MaterialPageRoute(
-                            builder: (BuildContext context) => HomePage()));
-                        Preferences().clearPreferences(context);
-                      },
-                      icon: Icon(Icons.logout),
-                      label: Text("Keluar"),
-                      textColor: Colors.white,
-                      color: Theme.of(context).cursorColor,
-                      minWidth: 350,
-                    ),
-                  ),
-                )
               ];
             }else{
               Navigator.pushReplacement(
-              context, MaterialPageRoute(
-              builder: (BuildContext context) => HomePage()));
+                  context, MaterialPageRoute(
+                  builder: (BuildContext context) => HomePage()));
               Preferences().clearPreferences(context);
             }
 
@@ -402,21 +384,8 @@ class _ProfilePageState extends State<ProfilePage> {
           } else {
             children = <Widget>[
               Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      child: CircularProgressIndicator(),
-                      width: 40,
-                      height: 40,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 16),
-                    )
-                  ],
-                ),
-              )
+                child: CircularProgressIndicator(),
+              ),
             ];
           }
           return Scaffold(
@@ -424,12 +393,25 @@ class _ProfilePageState extends State<ProfilePage> {
             appBar: AppBar(
               title: Text("Profile"),
               centerTitle: true,
+              actions: <Widget>[
+                PopupMenuButton<String>(
+                  onSelected: handleClick,
+                  itemBuilder: (BuildContext context) {
+                    return {'Settings', 'About', 'Logout'}.map((String choice) {
+                      return PopupMenuItem<String>(
+                        value: choice,
+                        child: Text(choice),
+                      );
+                    }).toList();
+                  },
+                ),
+              ],
             ),
             body: SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.fromLTRB(0, 0 ,0, 25),
                 child: Column(
-                  children: children
+                    children: children
                 ),
               ),
             ),
@@ -437,5 +419,55 @@ class _ProfilePageState extends State<ProfilePage> {
         },
       ),
     );
+  }
+
+  void handleClick(String value) {
+    switch (value) {
+      case 'Logout':
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(
+            builder: (BuildContext context) => HomePage()));
+        Preferences().clearPreferences(context);
+        break;
+      case 'About':
+        Navigator.push(
+            context, MaterialPageRoute(
+            builder: (BuildContext context) => AboutPage()));
+        break;
+      case 'Settings':
+        break;
+    }
+  }
+}
+
+
+
+enum MenuOption {
+  Send,
+  Draft,
+  Discard,
+}
+
+class PopupOptionMenu extends StatelessWidget {
+  const PopupOptionMenu({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<MenuOption>(itemBuilder: (BuildContext context) {
+      return <PopupMenuEntry<MenuOption>>[
+        PopupMenuItem(
+          child: Text('Send'),
+          value: MenuOption.Send,
+        ),
+        PopupMenuItem(
+          child: Text('Draft'),
+          value: MenuOption.Draft,
+        ),
+        PopupMenuItem(
+          child: Text('Discard'),
+          value: MenuOption.Discard,
+        ),
+      ];
+    });
   }
 }

@@ -34,6 +34,7 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 }
+
 class ToDoSearchDelegate extends SearchDelegate<ListUser> {
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -65,7 +66,6 @@ class ToDoSearchDelegate extends SearchDelegate<ListUser> {
       future: fetchGetSearchUser(query),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          print(snapshot.data);
           return ListView.builder(
             itemBuilder: (context, index) {
               return UserCard(

@@ -1,10 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:speakup/services/API.dart';
+import 'package:speakup/services/timeline.dart';
+import 'package:http/http.dart' as http;
 
 class News {
-  const News({this.name, this.title, this.description, this.image});
+  const News({this.id, this.liked, this.name, this.title, this.description, this.image});
 
+  final String id;
+  final bool liked;
   final String name;
   final String title;
   final String description;
@@ -25,7 +30,7 @@ const List<News> news = const <News>[
   
 ];
 
-class NewsCard extends StatelessWidget {
+class NewsCard extends StatefulWidget {
   const NewsCard(
       {Key key,
       this.news,
@@ -38,18 +43,31 @@ class NewsCard extends StatelessWidget {
   final VoidCallback onTap;
   final News item;
   final bool selected;
-  
+  @override
+  NewsCardList createState() {
+    return NewsCardList();
+  }
+}
+
+class NewsCardList extends State<NewsCard> {
+  Color _loveButtonColor = Colors.black;
+  bool liked;
   @override
   Widget build(BuildContext context) {
-
+    setState(() {
+      if (widget.item.liked == true) {
+        liked = widget.item.liked;
+        _loveButtonColor = Colors.red[700];
+      }
+    });
     TextStyle textStyle = Theme.of(context).textTheme.display1;
-    if (selected) {
+    if (widget.selected) {
       textStyle.copyWith(color: Colors.lightGreenAccent[400]);
     }
     return Card(
         color: Colors.white,
         child: InkWell(
-          onTap: onTap,
+          onTap: widget.onTap,
           child: Column(
             children: [
               Container(
@@ -73,7 +91,7 @@ class NewsCard extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
                       child: Text(
-                        item.name,
+                        widget.item.name,
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
@@ -87,14 +105,14 @@ class NewsCard extends StatelessWidget {
                 padding: EdgeInsets.all(8.0),
                 alignment: Alignment.topLeft,
                 child: CarouselSlider(
-                  options: item.image.length > 0 ? CarouselOptions(
+                  options: widget.item.image.length > 0 ? CarouselOptions(
                     aspectRatio: 16/9,
                     initialPage: 0,
                     enableInfiniteScroll: false,
                   ) : CarouselOptions(
                     height: 0
                   ),
-                  items: item.image.map((i){
+                  items: widget.item.image.map((i){
                     return Builder(
                       builder: (BuildContext context) {
                         return Container(
@@ -125,7 +143,7 @@ class NewsCard extends StatelessWidget {
                 padding: EdgeInsets.all(10.0),
                 alignment: Alignment.topLeft,
                 child: Text(
-                  news.description,
+                  widget.news.description,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w300,
@@ -140,9 +158,16 @@ class NewsCard extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.all(15),
                       child: IconButton(
-                        icon: Icon(Icons.favorite),
+                        icon: Icon(Icons.favorite, color: _loveButtonColor),
                         onPressed: () {
-                          
+                          print("love color "+_loveButtonColor.toString());
+                          setState(() {
+                            print("liked $liked");
+                            _loveButtonColor = liked == true ? Colors.black : Colors.red[700];
+                            liked = liked == true ? false : true;
+                            doLikeArticle(widget.item.id);
+                            print("favorite pressed "+widget.item.id);
+                          });
                         },
                       ),
                     ),
@@ -151,7 +176,7 @@ class NewsCard extends StatelessWidget {
                       child: IconButton(
                         icon: Icon(Icons.comment),
                         onPressed: () {
-                          
+                          print("comment pressed");
                         },
                       ),
                     )
@@ -163,4 +188,20 @@ class NewsCard extends StatelessWidget {
         )
       );
   }
+
+  void doLikeArticle(String articleId) {
+      String baseUrl = API.BASE_URL;
+      String likeArticleUrl = API.TIMELINE_LIKE;
+      like(http.Client(), baseUrl+likeArticleUrl+"?article_id="+articleId.toString(), articleId, context)
+      .then((onArticleLiked){
+        try {
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text(liked == true ? onArticleLiked : "Post Unliked Successfully"),
+          ));
+          print("ini onLike $onArticleLiked");
+        } catch (Exception) {
+
+        }
+      });
+    }
 }

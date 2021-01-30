@@ -7,4 +7,5 @@ class API {
   static const API_GET_PROFILE                  = 'user/profile';
   static const API_SEARCH_PROFILE               = 'user';
   static const TIMELINE                         = 'post';
+  static const TIMELINE_LIKE                    = 'post/likes';
 }

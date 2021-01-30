@@ -9,8 +9,17 @@ class Login {
   Login.fromJson(Map<String, dynamic> json) {
     code = json['code'];
     info = json['info'];
-    info = json['token'];
-    data = json['data'] != false ? new Data.fromJson(json['data']) : null;
+    if (json['token'] != null) {
+      token = json['token'];
+    }else{
+      token = null;
+    }
+    if (json['data'] != null) {
+      data = new Data.fromJson(json['data']);
+    }else{
+      data = null;
+    }
+    // data = (json['data'] != false || json['data'] != null) ? new Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
