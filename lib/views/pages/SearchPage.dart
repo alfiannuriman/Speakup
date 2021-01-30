@@ -30,17 +30,17 @@ class DataSearch extends SearchDelegate<String> {
 
   final recentCities = [
     "dena",
-    "joka",
+    "joko",
   ];
 
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.clear), 
-        onPressed: () {
-          query = "";
-       })
+          icon: Icon(Icons.clear),
+          onPressed: () {
+            query = "";
+          })
     ];
   }
 
@@ -82,22 +82,22 @@ class DataSearch extends SearchDelegate<String> {
 
     return ListView.builder(
       itemBuilder: (context, index) => ListTile(
-        onTap: (){
+        onTap: () {
           showResults(context);
         },
         leading: Icon(Icons.location_city),
         title: RichText(
           text: TextSpan(
-            text: suggestionList[index].substring(0, query.length),
-            style: TextStyle(
-              color: Colors.green, fontWeight: FontWeight.bold),
-            children: [
-              TextSpan(
-                text: suggestionList[index].substring(query.length),
-                style: TextStyle(color: Colors.grey))
-            ]),
-          ),
+              text: suggestionList[index].substring(0, query.length),
+              style:
+                  TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+              children: [
+                TextSpan(
+                    text: suggestionList[index].substring(query.length),
+                    style: TextStyle(color: Colors.grey))
+              ]),
         ),
+      ),
       itemCount: suggestionList.length,
     );
   }
