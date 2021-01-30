@@ -9,7 +9,7 @@ class SearchPage extends StatelessWidget {
         title: Text("Search Page"),
         actions: <Widget>[
           IconButton(
-              icon: Icon(Icon.search),
+              icon: Icon(Icons.search),
               onPressed: () {
                 showSearch(context: context, delegate: DataSearch());
               })
@@ -37,7 +37,7 @@ class DataSearch extends SearchDelegate<String> {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icon.clear), 
+        icon: Icon(Icons.clear), 
         onPressed: () {
           query = "";
        })
@@ -83,14 +83,14 @@ class DataSearch extends SearchDelegate<String> {
     return ListView.builder(
       itemBuilder: (context, index) => ListTile(
         onTap: (){
-          showResults(context)
+          showResults(context);
         },
         leading: Icon(Icons.location_city),
         title: RichText(
           text: TextSpan(
             text: suggestionList[index].substring(0, query.length),
             style: TextStyle(
-              color: Colors.green, fontWeight: FontWeight,bold),
+              color: Colors.green, fontWeight: FontWeight.bold),
             children: [
               TextSpan(
                 text: suggestionList[index].substring(query.length),
@@ -99,7 +99,6 @@ class DataSearch extends SearchDelegate<String> {
           ),
         ),
       itemCount: suggestionList.length,
-      ),
     );
   }
 }
