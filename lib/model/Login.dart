@@ -14,7 +14,7 @@ class Login {
     }else{
       token = null;
     }
-    if (json['data'] != null) {
+    if (json['data'] != false) {
       data = new Data.fromJson(json['data']);
     }else{
       data = null;

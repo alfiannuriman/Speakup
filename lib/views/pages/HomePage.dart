@@ -63,7 +63,6 @@ class HomePageState extends State<HomePage> {
     await prefs.setString('email', email);
     await prefs.setString('name', name);
 
-    print('token ' + token);
 
     Navigator.of(context).popUntil((route) => route.isFirst);
     Navigator.pushReplacement(context,
@@ -74,7 +73,6 @@ class HomePageState extends State<HomePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       String token = prefs.getString('token');
-      print(token);
       if (token != '' && token != null) {
         doCheckLogin(token);
       }
@@ -212,7 +210,6 @@ class HomePageState extends State<HomePage> {
     fetchPostLogin(http.Client(), username, password, baseUrl, context)
         .then((onValueLogin) {
       try {
-        print(onValueLogin);
         if (onValueLogin.code == 200) {
           snackbarAlert("Login Berhasil");
           _passwordController.text = "";
@@ -232,7 +229,6 @@ class HomePageState extends State<HomePage> {
   void doCheckLogin(String token) {
     fetchGetLogin(http.Client(), token, context).then((response) {
       try {
-        print(response);
         if (response.code == 200) {
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => BasePage()));

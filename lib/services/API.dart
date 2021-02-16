@@ -8,4 +8,8 @@ class API {
   static const API_SEARCH_PROFILE               = 'user';
   static const TIMELINE                         = 'post';
   static const TIMELINE_LIKE                    = 'post/likes';
+  static const API_FOLLOWER                     = 'user/followers';
+  static const API_FOLLOWING                    = 'user/followings';
+  static const API_FOLLOW                       = 'user/follows';
+  static const API_UNFOLLOW                     = 'user/unfollows';
 }

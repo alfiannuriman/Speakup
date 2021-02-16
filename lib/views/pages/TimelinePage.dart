@@ -137,8 +137,6 @@ int _currentIndex = 0;
             timelines = onvalueTimline;
           });
         }
-
-        print(onvalueTimline);
       } catch (Exception) {
         snackbarAlert("Terjadi Kesalahan, silakan coba beberapa saat lagi");
       }

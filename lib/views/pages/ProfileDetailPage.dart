@@ -1,42 +1,61 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 import 'package:speakup/services/user.dart';
 import 'package:speakup/services/preferences.dart';
 
-import 'package:speakup/model/news.dart';
+import 'package:speakup/model/listuser.dart';
 import 'package:speakup/model/user.dart';
+import 'package:speakup/model/news.dart';
 
 import 'package:speakup/views/pages/HomePage.dart';
-import 'package:speakup/views/pages/AboutPage.dart';
-import 'package:speakup/views/pages/FollowerPage.dart';
-import 'package:speakup/views/pages/SettingPage.dart';
 import 'package:speakup/views/news_detail.dart';
+import 'package:speakup/views/pages/FollowerPage.dart';
 
-class Profile extends StatelessWidget {
+
+class ProfileDetail extends StatelessWidget {
+
+  final ListUser profile;
+
+  ProfileDetail({
+    Key key, @required this.profile
+  });
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return ProfilePage();
+    return ProfileDetailPage(
+      key: key,
+      full_name: profile.full_name,
+      profile: profile,
+    );
   }
 }
 
-class ProfilePage extends StatefulWidget {
-  ProfilePage({Key key, this.title}) : super(key: key);
+class ProfileDetailPage extends StatefulWidget {
 
-  final String title;
-  _ProfilePageState createState() => _ProfilePageState();
+  final ListUser profile;
+  final String full_name;
+
+  ProfileDetailPage({
+    Key key,
+    this.full_name,
+    this.profile
+  }): super(key: key);
+
+  _ProfileDetailPageState createState() => _ProfileDetailPageState(full_name: profile.full_name, profile : profile);
 }
 
-class _ProfilePageState extends State<ProfilePage> {
-  Future<String> _calculation = Future<String>.delayed(
-    Duration(seconds: 2),
-    () => 'Data Loaded',
-  );
+class _ProfileDetailPageState extends State<ProfileDetailPage> {
+  final String full_name;
+  final ListUser profile;
+
+  _ProfileDetailPageState({
+    this.full_name,
+    this.profile
+  });
 
   String name = '';
   String code = '';
@@ -100,6 +119,40 @@ class _ProfilePageState extends State<ProfilePage> {
     loadDataUser();
   }
 
+  void doFollow(String user_id) {
+    fetchPostFollow(user_id)
+        .then((onValueLogin) {
+      try {
+        if (onValueLogin.code == 200) {
+          Navigator.of(context).pop();
+          snackbarAlert("Berhasil Mengikuti");
+        } else {
+          snackbarAlert("Terjadi Kesalahan");
+        }
+      } catch (Exception) {
+        snackbarAlert("Terjadi Kesalahan, silakan coba beberapa saat lagi");
+      }
+    });
+  }
+
+  void doUnfollow(String user_id) {
+    fetchPostUnfollow(user_id)
+        .then((onValueLogin) {
+      try {
+        if (onValueLogin.code == 200) {
+          Navigator.of(context).pop();
+          snackbarAlert("Berhenti Mengikuti");
+        } else {
+          // Navigator.of(context).pop();
+          snackbarAlert("Terjadi Kesalahan");
+        }
+      } catch (Exception) {
+        // Navigator.of(context).pop();
+        snackbarAlert("Terjadi Kesalahan, silakan coba beberapa saat lagi");
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -107,7 +160,7 @@ class _ProfilePageState extends State<ProfilePage> {
       style: Theme.of(context).textTheme.headline2,
       textAlign: TextAlign.center,
       child: FutureBuilder<user>(
-        future: fetchGetUser(), // a previously-obtained Future<String> or null
+        future: fetchGetUser(profile.user_id), // a previously-obtained Future<String> or null
         builder: (context, snapshot) {
           List<Widget> children;
           if (snapshot.hasData) {
@@ -168,40 +221,40 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                 children: <Widget>[
                                                   Container(
-                                                      padding: EdgeInsets.fromLTRB(20, 0 ,20, 0),
-                                                      child: InkWell(
-                                                        child: Text(
-                                                          "Follower : "+ dataUser.followers,
-                                                          style: TextStyle(
-                                                            color: Color(0xFF666666),
-                                                            fontWeight: FontWeight.w400,
-                                                            fontSize: 12,
-                                                          ),
+                                                    padding: EdgeInsets.fromLTRB(20, 0 ,20, 0),
+                                                    child: InkWell(
+                                                      child: Text(
+                                                        "Follower : "+ dataUser.followers,
+                                                        style: TextStyle(
+                                                          color: Color(0xFF666666),
+                                                          fontWeight: FontWeight.w400,
+                                                          fontSize: 12,
                                                         ),
-                                                        onTap: () {
-                                                          Navigator.push(context,
-                                                              MaterialPageRoute(builder: (context) => FollowerPage(title: "Follower", user_id: dataUser.user_id ))
-                                                          );
-                                                        },
-                                                      )
+                                                      ),
+                                                      onTap: () {
+                                                        Navigator.push(context,
+                                                            MaterialPageRoute(builder: (context) => FollowerPage(title: "Follower", user_id: dataUser.user_id ))
+                                                        );
+                                                      },
+                                                    )
                                                   ),
                                                   Container(
-                                                      padding: EdgeInsets.fromLTRB(20, 0 ,20, 0),
-                                                      child: InkWell(
-                                                        child: Text(
-                                                          "Following : "+ dataUser.following,
-                                                          style: TextStyle(
-                                                            color: Color(0xFF666666),
-                                                            fontWeight: FontWeight.w400,
-                                                            fontSize: 12,
-                                                          ),
+                                                    padding: EdgeInsets.fromLTRB(20, 0 ,20, 0),
+                                                    child: InkWell(
+                                                      child: Text(
+                                                        "Following : "+ dataUser.following,
+                                                        style: TextStyle(
+                                                          color: Color(0xFF666666),
+                                                          fontWeight: FontWeight.w400,
+                                                          fontSize: 12,
                                                         ),
-                                                        onTap: () {
-                                                          Navigator.push(context,
-                                                              MaterialPageRoute(builder: (context) => FollowerPage(title: "Following", user_id: dataUser.user_id ))
-                                                          );
-                                                        },
-                                                      )
+                                                      ),
+                                                      onTap: () {
+                                                        Navigator.push(context,
+                                                            MaterialPageRoute(builder: (context) => FollowerPage(title: "Following", user_id: dataUser.user_id ))
+                                                        );
+                                                      },
+                                                    )
                                                   ),
                                                 ],
                                               ),
@@ -209,32 +262,50 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                       )
                                   ),
+                                  Container(
+                                    margin: EdgeInsets.only(top: 20),
+                                    child: FlatButton(
+                                      onPressed: () {
+                                        if(dataUser.is_followed){
+                                          this.doUnfollow(profile.user_id);
+                                        }else{
+                                          this.doFollow(profile.user_id);
+                                        }
+
+                                      },
+                                      child: Text((dataUser.is_followed)? "Unfollow" : "Follow"),
+                                      textColor: Colors.white,
+                                      color: Theme.of(context).cursorColor,
+                                      minWidth: 350,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
                           ),
+                          Container(
+                            child: ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: dataUser.posts.length,
+                              itemBuilder: (context, index) {
+                                return NewsCardProfile(
+                                  news: dataUser.posts[index],
+                                  item: dataUser.posts[index],
+                                  onTap: () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) => NewsDetail(news: dataUser.posts[index]))
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
                         ]
                     )
-                ),
-                Container(
-                  child: ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: dataUser.posts.length,
-                    itemBuilder: (context, index) {
-                      return NewsCardProfile(
-                        news: dataUser.posts[index],
-                        item: dataUser.posts[index],
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => NewsDetail(news: dataUser.posts[index]))
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ),
+                )
               ];
+
             }else{
               Navigator.pushReplacement(
                   context, MaterialPageRoute(
@@ -272,21 +343,7 @@ class _ProfilePageState extends State<ProfilePage> {
           return Scaffold(
             key: _scaffoldKey,
             appBar: AppBar(
-              title: Text("Profile"),
-              centerTitle: true,
-              actions: <Widget>[
-                PopupMenuButton<String>(
-                  onSelected: handleClick,
-                  itemBuilder: (BuildContext context) {
-                    return {'Settings', 'About', 'Logout'}.map((String choice) {
-                      return PopupMenuItem<String>(
-                        value: choice,
-                        child: Text(choice),
-                      );
-                    }).toList();
-                  },
-                ),
-              ],
+              title: Text(full_name),
             ),
             body: SingleChildScrollView(
               child: Container(
@@ -301,26 +358,4 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-
-  void handleClick(String value) {
-    switch (value) {
-      case 'Logout':
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(
-            builder: (BuildContext context) => HomePage()));
-        Preferences().clearPreferences(context);
-        break;
-      case 'About':
-        Navigator.push(
-            context, MaterialPageRoute(
-            builder: (BuildContext context) => AboutPage()));
-        break;
-      case 'Settings':
-        Navigator.push(
-            context, MaterialPageRoute(
-            builder: (BuildContext context) => SettingPage()));
-        break;
-    }
-  }
 }
-
