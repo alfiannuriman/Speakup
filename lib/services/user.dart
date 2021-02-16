@@ -50,7 +50,7 @@ Future<user> fetchPostUser(String full_name,  String telepon, String gender,Stri
   }
 }
 
-Future<user> fetchGetUser() async {
+Future<user> fetchGetUser([String user_id]) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   Map<String, dynamic> body;
   Map<String, dynamic> bodyAuth;
@@ -58,12 +58,45 @@ Future<user> fetchGetUser() async {
     'Authorization': "Bearer "+ prefs.getString('token'),
   };
 
+  String url = '';
+  if(user_id != null){
+    url  = API.BASE_URL + API.API_GET_PROFILE+"?user_id="+user_id;
+  }else{
+    url  = API.BASE_URL + API.API_GET_PROFILE;
+  }
+
+  final response =
+  await http.get(url, headers: headers);
+
+  print('fetchGetUser '+response.body+url);
+  if(response.statusCode == 200){
+    return compute(parsePosts, response.body);
+  }else{
+    return null;
+  }
+}
+
+Future<user> fetchPostFollow([String user_id]) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  Map<String, dynamic> body;
+  Map<String, dynamic> bodyAuth;
+  Map<String, String> headers = {
+    'Authorization': "Bearer "+ prefs.getString('token'),
+  };
+  bodyAuth = {
+    'user_id':user_id,
+  };
+  body = bodyAuth;
   print(headers);
   print('body ' + body.toString());
-  final response =
-  await http.get(API.BASE_URL + API.API_GET_PROFILE, headers: headers);
+  String url = '';
 
-  print('fetchGetUser '+response.body+API.BASE_URL + API.API_GET_PROFILE);
+  url  = API.BASE_URL + API.API_FOLLOW;
+
+  final response =
+  await http.post(url, body: body, headers: headers);
+
+  print('fetchGetUser '+response.body+url);
 
   if(response.statusCode == 200){
     return compute(parsePosts, response.body);
@@ -72,8 +105,39 @@ Future<user> fetchGetUser() async {
   }
 }
 
+Future<user> fetchPostUnfollow([String user_id]) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  Map<String, dynamic> body;
+  Map<String, dynamic> bodyAuth;
+  Map<String, String> headers = {
+    'Authorization': "Bearer "+ prefs.getString('token'),
+  };
+  bodyAuth = {
+    'user_id':user_id,
+  };
+  body = bodyAuth;
+  print(headers);
+  print('body ' + body.toString());
+  String url = '';
+
+  url  = API.BASE_URL + API.API_UNFOLLOW;
+
+  final response =
+  await http.post(url, body: body, headers: headers);
+
+  print('fetchGetUser '+response.body+url);
+
+  if(response.statusCode == 200){
+    return compute(parsePosts, response.body);
+  }else{
+    return null;
+  }
+}
+
+
 user parsePosts(String responseBody) {
   final parsed = json.decode(responseBody);
+
   var data = Map<String, dynamic>.from(parsed);
   user eventResponse = user.fromJson(data);
   return eventResponse;
