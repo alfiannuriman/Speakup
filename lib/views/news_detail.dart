@@ -3,6 +3,12 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:speakup/model/news.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:speakup/services/API.dart';
+import 'package:speakup/services/timeline.dart';
+import 'package:http/http.dart' as http;
+import 'package:speakup/tools/extension.dart';
+
+final _commentTextController = TextEditingController();
 
 class NewsDetail extends StatelessWidget {
   final News news;
@@ -30,14 +36,18 @@ class NewsDetailPage extends StatefulWidget {
   });
   final News news;
   final String title;
-  _NewsDetailState createState() => _NewsDetailState(image: news.image, title: news.title, description: news.description);
+  _NewsDetailState createState() => _NewsDetailState(id: news.id,image: news.image, title: news.title, description: news.description);
 }
 
-class _NewsDetailState extends State<NewsDetailPage> {
+class _NewsDetailState extends State<NewsDetailPage>  with WidgetsBindingObserver  {
+  final GlobalKey<State> _scaffoldKey = new GlobalKey<State>();
+  final String id;
   final String title;
   final List<String> image;
   final String description;
+  var comments = articletComments;
   _NewsDetailState({
+    this.id,
     this.title,
     this.image,
     this.description
@@ -116,18 +126,142 @@ class _NewsDetailState extends State<NewsDetailPage> {
                   textAlign: TextAlign.left,
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(10, 25, 10, 25),
-                child: TextFormField(
-                  cursorColor: Theme.of(context).cursorColor,
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.post_add), labelText: "Komentar"),
-                  ),
+              Builder(
+                builder: (BuildContext context) {
+                  return Container(
+                    margin: const EdgeInsets.fromLTRB(10, 25, 10, 25),
+                    child: TextField(
+                      controller: _commentTextController,
+                      cursorColor: Theme.of(context).cursorColor,
+                      decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          icon: Icon(Icons.send),
+                          onPressed: () {
+                            // Dialogs.showLoadingDialog(context, _scaffoldKey);
+                            doCommentArticle(id, context);
+                          },
+                        ),
+                        icon: Icon(Icons.post_add), labelText: "Komentar"),
+                      ),
+                  );
+                },
               ),
+              Container(
+                padding: const EdgeInsets.fromLTRB(10, 25, 10, 25),
+                alignment: Alignment.topLeft,
+                child: Text(
+                  "Komentar",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.fromLTRB(10, 25, 10, 25),
+                alignment: Alignment.topLeft,
+                child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: comments.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.black
+                          )
+                        )
+                      ),
+                      alignment: Alignment.topLeft,
+                      child: Row(
+                        children: [
+                          Text(
+                            comments[index].fullName+": ",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700
+                            ),
+                            textAlign: TextAlign.left,
+                          ),
+                          Text(
+                            comments[index].comment,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700
+                            ),
+                            textAlign: TextAlign.left,
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                )
+              )
             ],
           )
         ),
       )
     );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+    doLoadPostComment(id, context);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    WidgetsBinding.instance.addObserver(this);
+    super.dispose();
+    doLoadPostComment(id, context);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // TODO: implement didChangeAppLifecycleState
+    super.didChangeAppLifecycleState(state);
+    doLoadPostComment(id, context);
+  }
+
+  void doLoadPostComment(String articleId, BuildContext context) {
+    String baseUrl = API.BASE_URL;
+    getComments(http.Client(), baseUrl, articleId, context)
+    .then((onArticleComments){
+      try {
+        print("response $onArticleComments");
+        if (this.mounted) {
+          setState(() {
+            comments = onArticleComments;
+          });
+        }
+      } on Exception catch (exception) {
+        print(exception);
+      }
+    });
+  }
+  
+  void doCommentArticle(String articleId, BuildContext context) {
+    String comment = _commentTextController.text;
+    String baseUrl = API.BASE_URL;
+    postComment(http.Client(), baseUrl, articleId, comment, context)
+    .then((onArticleCommented){
+      try {
+        print("response $onArticleCommented");
+        // Navigator.of(context, rootNavigator: true).pop();
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text("$onArticleCommented"),
+        ));
+        doLoadPostComment(articleId, context);
+      } on Exception catch (exception) {
+        print(exception);
+      }
+    });
   }
 }

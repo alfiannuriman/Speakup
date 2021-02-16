@@ -38,7 +38,6 @@ class BasePage extends StatefulWidget {
 class BasePageState extends State<BasePage> {
   int _currentIndex = 0;
   String pageTitle = "Beranda";
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;

@@ -5,6 +5,14 @@ import 'package:speakup/services/API.dart';
 import 'package:speakup/services/timeline.dart';
 import 'package:http/http.dart' as http;
 
+class ArticleComments {
+  const ArticleComments({this.id, this.comment, this.fullName});
+
+  final String id;
+  final String comment;
+  final String fullName;
+}
+
 class News {
   const News({this.id, this.liked, this.name, this.title, this.description, this.image});
 
@@ -27,6 +35,10 @@ class News {
 }
 
 const List<News> news = const <News>[
+  
+];
+
+const List<ArticleComments> articletComments = const <ArticleComments>[
   
 ];
 
