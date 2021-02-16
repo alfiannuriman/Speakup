@@ -9,6 +9,17 @@ class AboutPage extends StatelessWidget {
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+              const Text.rich(
+                TextSpan(
+                    text:
+                        '       Speak Up Adalah aplikasi untuk anda anda yang ingin berbicara lebih lantang di dunia maya. Suara anda akan terdengar oleh teman teman yg anda inginkan. Ekspresikan suara anda di',
+                    style: TextStyle(fontSize: 20)),
+              ),
+              Text('"Speak Up"',
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                  )),
               Text('Copyright by :', style: TextStyle(fontSize: 20)),
               Text('Muchamad Alfian Nur Iman -',
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
