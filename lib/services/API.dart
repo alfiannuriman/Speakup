@@ -5,8 +5,13 @@ class API {
   static const API_GET_USER                     = 'auth/user';
   static const API_REGISTER                     = 'auth/register';
   static const API_GET_PROFILE                  = 'user/profile';
+  static const API_SEARCH_PROFILE               = 'user';
   static const TIMELINE                         = 'post';
   static const TIMELINE_LIKE                    = 'post/likes';
   static const POST_COMMENT                     = 'post/comments';
   static const GET_COMMENT                      = 'post/comments';
+  static const API_FOLLOWER                     = 'user/followers';
+  static const API_FOLLOWING                    = 'user/followings';
+  static const API_FOLLOW                       = 'user/follows';
+  static const API_UNFOLLOW                     = 'user/unfollows';
 }

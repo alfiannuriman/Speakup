@@ -64,7 +64,6 @@ class HomePageState extends State<HomePage> {
     await prefs.setString('email', email);
     await prefs.setString('name', name);
 
-    print('token ' + token);
 
     Navigator.of(context).popUntil((route) => route.isFirst);
     Navigator.pushReplacement(context,
@@ -75,7 +74,6 @@ class HomePageState extends State<HomePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       String token = prefs.getString('token');
-      print(token);
       if (token != '' && token != null) {
         doCheckLogin(token);
       }
@@ -203,31 +201,6 @@ class HomePageState extends State<HomePage> {
                           )),
                     ),
                   ),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: FlatButton(
-                        color: Colors.green,
-                        textColor: Colors.white,
-                        disabledColor: Colors.grey,
-                        disabledTextColor: Colors.black,
-                        padding: EdgeInsets.all(8.0),
-                        splashColor: Colors.blueAccent,
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AboutPage()));
-                        },
-                        child: Text(
-                          "About Us",
-                          style: TextStyle(fontSize: 20.0),
-                        ),
-                      ),
-                    ),
-                  )
                 ],
               )),
             )));
@@ -248,8 +221,8 @@ class HomePageState extends State<HomePage> {
           saveDataUser(onValueLogin.data.code, onValueLogin.data.token,
               onValueLogin.data.email, onValueLogin.data.name);
         } else {
-          Navigator.of(context).pop();
-          snackbarAlert("Terjadi Kesalahan");
+          // Navigator.of(context).pop();
+          snackbarAlert(onValueLogin.info);
         }
       } catch (Exception) {
         //Navigator.of(context).pop();
@@ -261,7 +234,6 @@ class HomePageState extends State<HomePage> {
   void doCheckLogin(String token) {
     fetchGetLogin(http.Client(), token, context).then((response) {
       try {
-        print(response);
         if (response.code == 200) {
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => BasePage()));

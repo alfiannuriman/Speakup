@@ -1,3 +1,8 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:speakup/model/news.dart';
+
 class user {
   int code;
   String info;
@@ -35,9 +40,11 @@ class Data {
   String gender;
   String followers;
   String following;
+  bool is_followed;
+  List<News> posts;
 
 
-  Data({this.full_name, this.detail_id, this.user_id, this.telepon, this.birth_date, this.birth_place, this.gender, this.followers, this.following});
+  Data({this.full_name, this.detail_id, this.user_id, this.telepon, this.birth_date, this.birth_place, this.gender, this.followers, this.following, this.is_followed, this.posts});
 
   Data.fromJson(Map<String, dynamic> json) {
     full_name = json['full_name'];
@@ -49,6 +56,25 @@ class Data {
     gender = json['gender'];
     following = json['following'];
     followers = json['followers'];
+    is_followed = json['is_followed'];
+    var timelinesData = json['posts'];
+    List<News> timelinesList = <News>[];
+    for (var timeline in timelinesData) {
+      List<String> images = [];
+      for (var image in timeline["medias"] ?? []) {
+        images.add(image["file_url"]);
+      }
+      var newNews = News(
+          id: timeline["article_id"],
+          liked: timeline["liked"] == "1" ? true : false,
+          name: json["full_name"],
+          title: timeline["content"],
+          description: timeline["content"],
+          image: images
+      );
+      timelinesList.add(newNews);
+    }
+    posts = timelinesList;
 
   }
 
@@ -63,6 +89,8 @@ class Data {
     data['gender'] = this.gender;
     data['followers'] = this.followers;
     data['following'] = this.following;
+    data['is_followed'] = this.is_followed;
+    data['posts'] = this.posts;
     return data;
   }
 }

@@ -6,6 +6,7 @@ import 'package:speakup/views/news_detail.dart';
 import 'package:speakup/views/pages/ProfilePage.dart';
 import 'package:speakup/views/pages/CreatePostPage.dart';
 import 'package:speakup/views/pages/TimelinePage.dart';
+import 'package:speakup/views/pages/SearchPage.dart';
 
 import 'package:speakup/views/widgets/CreatePost.dart';
 import 'package:speakup/views/widgets/PostList.dart';
@@ -44,29 +45,11 @@ class BasePageState extends State<BasePage> {
     final textTheme = Theme.of(context).textTheme;
     final _listPage = <Widget>[
       TimelinePage(),
-      ListView.builder(
-        itemCount: news.length,
-        itemBuilder: (context, index) {
-          return NewsCard(
-            news: news[index],
-            item: news[index],
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => NewsDetail(news: news[index]))
-              );
-            },
-          );
-        },
-      ),
-      // SearchPage(),
+      SearchPage(),
       Profile()
     ];
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(pageTitle),
-        centerTitle: true,
-      ),
       body: Center(
         child: _listPage[_currentIndex],
       ),
@@ -95,7 +78,7 @@ class BasePageState extends State<BasePage> {
         },
         items: [
           BottomNavigationBarItem(
-            title: Text('Timline'),
+            title: Text('Beranda'),
             icon: Icon(Icons.home),
           ),
           BottomNavigationBarItem(
