@@ -12,6 +12,7 @@ import 'package:speakup/model/Login.dart';
 import 'package:http/http.dart' as http;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:speakup/tools/extension.dart';
 
 final _userController = TextEditingController();
 final _passwordController = TextEditingController();
@@ -172,6 +173,9 @@ class HomePageState extends State<HomePage> {
                           child: Text('Login'),
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
+                              Dialogs.showLoadingDialog(
+                                context, _scaffoldKey
+                              );
                               doLogin();
                             }
                           }),
@@ -210,8 +214,9 @@ class HomePageState extends State<HomePage> {
     fetchPostLogin(http.Client(), username, password, baseUrl, context)
         .then((onValueLogin) {
       try {
-        if (onValueLogin.code == 200) {
-          snackbarAlert("Login Berhasil");
+        print(onValueLogin);
+        if (onValueLogin.data != null) {
+          Navigator.of(_scaffoldKey.currentContext, rootNavigator: true).pop();
           _passwordController.text = "";
           saveDataUser(onValueLogin.data.code, onValueLogin.data.token,
               onValueLogin.data.email, onValueLogin.data.name);
