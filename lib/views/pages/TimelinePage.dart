@@ -85,7 +85,7 @@ int _currentIndex = 0;
               item: timelines[index],
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => NewsDetail(news: timelines[index]))
+                    MaterialPageRoute(builder: (context) => NewsDetail(news: timelines[index], isComment: false))
                 );
               },
             );

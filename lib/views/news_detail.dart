@@ -12,9 +12,10 @@ final _commentTextController = TextEditingController();
 
 class NewsDetail extends StatelessWidget {
   final News news;
+  final bool isComment;
 
   NewsDetail({
-    Key key, @required this.news
+    Key key, @required this.news, this.isComment
   });
 
   @override
@@ -24,6 +25,7 @@ class NewsDetail extends StatelessWidget {
       key: key,
       title: news.title,
       news: news,
+      isComment: isComment,
     );
   }
 }
@@ -32,11 +34,13 @@ class NewsDetailPage extends StatefulWidget {
   NewsDetailPage({
     Key key,
     this.title,
-    this.news
+    this.news,
+    this.isComment
   });
   final News news;
   final String title;
-  _NewsDetailState createState() => _NewsDetailState(id: news.id,image: news.image, title: news.title, description: news.description);
+  final bool isComment;
+  _NewsDetailState createState() => _NewsDetailState(id: news.id,image: news.image, title: news.title, description: news.description, isComment: isComment);
 }
 
 class _NewsDetailState extends State<NewsDetailPage>  with WidgetsBindingObserver  {
@@ -45,17 +49,20 @@ class _NewsDetailState extends State<NewsDetailPage>  with WidgetsBindingObserve
   final String title;
   final List<String> image;
   final String description;
+  final bool isComment;
   var comments = articletComments;
   _NewsDetailState({
     this.id,
     this.title,
     this.image,
-    this.description
+    this.description,
+    this.isComment
   });
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    // print("ini isComment $isComment");
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
@@ -131,6 +138,7 @@ class _NewsDetailState extends State<NewsDetailPage>  with WidgetsBindingObserve
                   return Container(
                     margin: const EdgeInsets.fromLTRB(10, 25, 10, 25),
                     child: TextField(
+                      autofocus: isComment,
                       controller: _commentTextController,
                       cursorColor: Theme.of(context).cursorColor,
                       decoration: InputDecoration(

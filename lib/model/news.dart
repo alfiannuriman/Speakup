@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:speakup/services/API.dart';
 import 'package:speakup/services/timeline.dart';
 import 'package:http/http.dart' as http;
+import 'package:speakup/views/news_detail.dart';
 
 class ArticleComments {
   const ArticleComments({this.id, this.comment, this.fullName});
@@ -47,12 +48,14 @@ class NewsCard extends StatefulWidget {
       {Key key,
       this.news,
       this.onTap,
+      this.onCommentTapped,
       @required this.item,
       this.selected: false})
       : super(key: key);
 
   final News news;
   final VoidCallback onTap;
+  final VoidCallback onCommentTapped;
   final News item;
   final bool selected;
   @override
@@ -65,13 +68,15 @@ class NewsCardProfile extends StatefulWidget {
   const NewsCardProfile(
       {Key key,
         this.news,
+        this.onCommentTapped,
         this.onTap,
         @required this.item,
         this.selected: false})
       : super(key: key);
 
   final News news;
-  final VoidCallback onTap;
+  final VoidCallback  onTap;
+  final VoidCallback onCommentTapped;
   final News item;
   final bool selected;
   @override
@@ -208,6 +213,9 @@ class NewsCardList extends State<NewsCard> {
                         icon: Icon(Icons.comment),
                         onPressed: () {
                           print("comment pressed");
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => NewsDetail(news: widget.item, isComment: true))
+                          );
                         },
                       ),
                     )
@@ -334,6 +342,9 @@ class NewsCardListProfile extends State<NewsCardProfile> {
                           icon: Icon(Icons.comment),
                           onPressed: () {
                             print("comment pressed");
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) => NewsDetail(news: widget.item, isComment: true))
+                            );
                           },
                         ),
                       )
